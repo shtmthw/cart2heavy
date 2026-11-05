@@ -18,7 +18,7 @@ export function Avatar({
       aria-hidden
       className={cn(
         size,
-        'grid place-items-center rounded-full bg-accent-soft font-semibold text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300',
+        'grid place-items-center rounded-full bg-accent-soft font-semibold text-accent',
         className,
       )}
     >

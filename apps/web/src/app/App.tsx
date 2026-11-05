@@ -19,7 +19,7 @@ export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-      <Toaster theme="system" position="bottom-center" closeButton />
+      <Toaster theme="dark" position="bottom-center" closeButton />
     </QueryClientProvider>
   );
 }

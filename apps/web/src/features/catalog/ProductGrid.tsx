@@ -36,8 +36,8 @@ export function ProductGrid({
   if (query.data.items.length === 0) return <>{empty}</>;
   return (
     <div className={grid} aria-busy={query.isPlaceholderData}>
-      {query.data.items.map((product) => (
-        <ProductCard key={product.id} product={product} />
+      {query.data.items.map((product, index) => (
+        <ProductCard key={product.id} product={product} index={index} />
       ))}
     </div>
   );

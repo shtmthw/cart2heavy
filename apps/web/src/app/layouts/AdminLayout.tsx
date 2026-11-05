@@ -1,5 +1,4 @@
-import { NavLink, Outlet, ScrollRestoration } from 'react-router';
-import { Container } from '../../components/ui/page';
+import { NavLink, Outlet, ScrollRestoration, useLocation } from 'react-router';
 import { cn } from '../../lib/utils';
 import { AccountMenu } from './AccountMenu';
 
@@ -7,7 +6,7 @@ const link = ({ isActive }: { isActive: boolean }) =>
   cn(
     'rounded-full px-3.5 py-1.5 text-sm font-medium whitespace-nowrap transition-colors',
     isActive
-      ? 'bg-accent-soft text-indigo-800 dark:bg-indigo-950 dark:text-indigo-200'
+      ? 'bg-accent-soft text-accent'
       : 'text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800',
   );
 
@@ -19,13 +18,14 @@ export function StaffLayout({
   title: string;
   links: { to: string; label: string; end?: boolean }[];
 }) {
+  const { pathname } = useLocation();
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="sticky top-0 z-20 border-b border-zinc-200/70 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
-        <Container className="max-w-6xl py-3">
+        <div className="px-4 py-3 sm:px-8">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <NavLink to="/" className="text-2xl font-bold tracking-tight">
+              <NavLink to="/" className="text-3xl font-bold tracking-tight">
                 cart<span className="text-accent">2</span>heavy
               </NavLink>
               <span className="rounded bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
@@ -51,9 +51,9 @@ export function StaffLayout({
               ))}
             </nav>
           )}
-        </Container>
+        </div>
       </header>
-      <main className="flex-1 py-8">
+      <main key={pathname} className="animate-fade-up flex-1 py-8">
         <Outlet />
       </main>
       <ScrollRestoration />

@@ -598,3 +598,6 @@ image is ~312 MB unpacked (target was 250); the compose ports listen on 127.0.0.
   `pnpm e2e` 19/19 green. Waiting for the Docker Hub push (see Phase 10 above).
 - 2026-11-05 — Follow-up: seed catalog now uses real product names/prices (MSI boards, Apple devices; photos are still the old placeholders), UI polish
   (soft page background, rounder cards/controls, pill sort select, bigger logo shifted right, mobile chip/scroll fixes), Instagram link removed.
+- 2026-11-05 — Follow-up 2: whole site on one warm dark theme (#69281D), peach accent, page/menu/dialog/card animations, header full width with the logo
+  left-aligned; seed photos replaced with CC-licensed Wikimedia Commons photos (credits in README); motherboards are ASUS ROG Strix boards because
+  MSI blocks downloads and has no free photos.

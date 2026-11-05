@@ -27,7 +27,9 @@ test.describe('storefront', () => {
     await expect(page).not.toHaveURL(/category=/);
     await page.getByLabel('Sort products').selectOption('price_asc');
     await expect(page).toHaveURL(/sort=price_asc/);
-    await expect(page.getByRole('heading', { level: 3 }).first()).toContainText('MSI MAG');
+    await expect(page.getByRole('heading', { level: 3 }).first()).toContainText(
+      'ASUS ROG Strix B450-F',
+    );
   });
 
   test('pagination: the 13th product moves to page 2, and the page survives a reload', async ({
@@ -58,15 +60,19 @@ test.describe('storefront', () => {
   test('a product page survives a refresh (the old app broke here)', async ({ page }) => {
     await page.goto('/');
     await page
-      .getByRole('link', { name: /MSI MEG Z790 ACE/ })
+      .getByRole('link', { name: /ASUS ROG Strix Z690-A Gaming WiFi/ })
       .first()
       .click();
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('MSI MEG Z790 ACE');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      'ASUS ROG Strix Z690-A Gaming WiFi',
+    );
     const url = page.url();
     await page.reload();
     await expect(page).toHaveURL(url);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('MSI MEG Z790 ACE');
-    await expect(page.getByText('$699.99').first()).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      'ASUS ROG Strix Z690-A Gaming WiFi',
+    );
+    await expect(page.getByText('$349.99').first()).toBeVisible();
 
     await page.goto('/products/507f1f77bcf86cd799439011');
     await expect(page.getByText('This product is not available')).toBeVisible();
@@ -75,12 +81,12 @@ test.describe('storefront', () => {
   test('instant search: dropdown, keyboard, results page', async ({ page }) => {
     await page.goto('/');
     const box = page.getByRole('combobox', { name: 'Search products' });
-    await box.fill('godlike');
+    await box.fill('b450');
     const list = page.getByRole('listbox', { name: 'Suggestions' });
     await expect(list.getByRole('option')).toHaveCount(1);
-    await expect(list).toContainText('GODLIKE');
+    await expect(list).toContainText('B450-F');
 
-    await box.fill('msi');
+    await box.fill('asus');
     await expect(list.getByRole('option')).toHaveCount(5);
     await box.press('ArrowDown');
     await box.press('ArrowDown');
@@ -89,10 +95,10 @@ test.describe('storefront', () => {
     await expect(list).toBeHidden();
 
     // Enter without choosing a suggestion opens the results page (Escape cleared the field)
-    await box.fill('msi');
+    await box.fill('asus');
     await box.press('Enter');
-    await expect(page).toHaveURL(/\/search\?q=msi/);
-    await expect(page.getByRole('heading', { name: 'Results for “msi”' })).toBeVisible();
+    await expect(page).toHaveURL(/\/search\?q=asus/);
+    await expect(page.getByRole('heading', { name: 'Results for “asus”' })).toBeVisible();
     await expect(page.getByRole('heading', { level: 3 })).toHaveCount(5);
 
     await box.fill('zzzzzz');
@@ -114,23 +120,23 @@ test.describe('storefront', () => {
     page,
   }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'Add MSI MAG B760 TOMAHAWK WIFI to cart' }).click();
-    await expect(page.getByText('MSI MAG B760 TOMAHAWK WIFI added to your cart')).toBeVisible();
+    await page.getByRole('button', { name: 'Add ASUS ROG Strix B450-F Gaming to cart' }).click();
+    await expect(page.getByText('ASUS ROG Strix B450-F Gaming added to your cart')).toBeVisible();
     await page.reload();
     await expect(page.getByRole('link', { name: 'Cart, 1 item' })).toBeVisible();
 
     await page.getByRole('link', { name: 'Cart, 1 item' }).click();
     await expect(page.getByRole('heading', { name: 'Your cart' })).toBeVisible();
     const summary = page.getByRole('complementary', { name: 'Order summary' });
-    await expect(summary).toContainText('Subtotal$219.99');
+    await expect(summary).toContainText('Subtotal$119.99');
     await expect(summary).toContainText('Delivery$1.80');
-    await expect(summary).toContainText('Total$221.79');
+    await expect(summary).toContainText('Total$121.79');
 
     await page.getByRole('button', { name: 'Increase quantity' }).click();
-    await expect(summary).toContainText('Subtotal$439.98');
+    await expect(summary).toContainText('Subtotal$239.98');
     await expect(page.getByRole('link', { name: 'Cart, 2 items' })).toBeVisible();
 
-    await page.getByRole('button', { name: 'Remove MSI MAG B760 TOMAHAWK WIFI' }).click();
+    await page.getByRole('button', { name: 'Remove ASUS ROG Strix B450-F Gaming' }).click();
     await expect(page.getByText('Your cart is empty')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Cart, empty' })).toBeVisible();
   });

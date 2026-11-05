@@ -93,7 +93,7 @@ export function SearchBox({ className }: { className?: string }) {
         role="listbox"
         aria-label="Suggestions"
         hidden={!showList}
-        className="absolute top-full right-0 left-0 z-30 mt-2 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
+        className="animate-pop absolute top-full right-0 left-0 z-30 mt-2 origin-top overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
       >
         {options.map((product, index) => (
           <li

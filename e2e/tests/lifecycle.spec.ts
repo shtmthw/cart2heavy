@@ -14,7 +14,7 @@ test('an order goes from processing to delivered, and the customer sees each ste
   const shopper = await signUp(customer);
   await customer.goto('/');
   await customer.getByRole('button', { name: 'Add Apple iPhone 15 (128 GB) to cart' }).click();
-  await customer.getByRole('button', { name: 'Add MSI MAG B760 TOMAHAWK WIFI to cart' }).click();
+  await customer.getByRole('button', { name: 'Add ASUS ROG Strix B450-F Gaming to cart' }).click();
   await customer.getByRole('link', { name: 'Cart, 2 items' }).click();
   await customer.getByRole('button', { name: 'Checkout' }).click();
   await fillAddress(customer);
@@ -61,11 +61,11 @@ test('an order goes from processing to delivered, and the customer sees each ste
     'Out for delivery',
     'Mark as delivered',
   ];
-  for (const step of steps) {
+  for (const [index, step] of steps.entries()) {
     await card.getByRole('button', { name: step }).click();
-    await expect(logistics.getByText(new RegExp(`${orderNumber} → `))).toBeVisible();
-    if (step !== steps.at(-1))
-      await logistics.getByText(new RegExp(`${orderNumber} → `)).waitFor({ state: 'detached' });
+    // the card now offers the next step (a toast would also do, but it stays open while hovered)
+    const next = steps[index + 1];
+    if (next) await expect(card.getByRole('button', { name: next })).toBeVisible();
   }
   // finished orders leave the default queue
   await expect(logistics.getByText(orderNumber, { exact: true })).toBeHidden();

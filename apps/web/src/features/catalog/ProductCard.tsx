@@ -5,10 +5,13 @@ import { Button } from '../../components/ui/button';
 import { Card } from '../../components/ui/card';
 import { useAddToCart } from '../cart/useAddToCart';
 
-export function ProductCard({ product }: { product: ProductDTO }) {
+export function ProductCard({ product, index = 0 }: { product: ProductDTO; index?: number }) {
   const { addToCart, pendingId } = useAddToCart();
   return (
-    <Card className="flex flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg">
+    <Card
+      style={{ animationDelay: `${Math.min(index, 11) * 45}ms` }}
+      className="animate-fade-up flex flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+    >
       <Link to={`/products/${product.id}`} className="group block">
         <div className="aspect-[3/2] overflow-hidden bg-zinc-100 dark:bg-zinc-800">
           <img

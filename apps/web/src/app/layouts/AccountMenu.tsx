@@ -75,7 +75,7 @@ export function AccountMenu() {
         <div
           role="menu"
           onClick={() => setOpen(false)}
-          className="absolute right-0 z-30 mt-1 w-52 overflow-hidden rounded-md border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
+          className="animate-pop absolute right-0 z-30 mt-2 w-56 origin-top-right overflow-hidden rounded-xl border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
         >
           <div className="border-b border-zinc-200 px-3 py-2 dark:border-zinc-800">
             <p className="truncate text-sm font-medium">{user.name}</p>

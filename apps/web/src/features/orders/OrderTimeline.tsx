@@ -64,9 +64,7 @@ export function OrderTimeline({
               className={cn(
                 'relative z-10 mt-0.5 grid size-5 shrink-0 place-items-center rounded-full',
                 done && 'bg-emerald-600 text-white',
-                current &&
-                  !done &&
-                  'bg-accent text-white ring-4 ring-accent-soft dark:ring-indigo-950',
+                current && !done && 'bg-accent text-ink ring-4 ring-accent-soft',
                 !done && !current && 'bg-white text-zinc-300 dark:bg-zinc-950 dark:text-zinc-700',
               )}
             >

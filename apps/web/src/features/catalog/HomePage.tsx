@@ -43,7 +43,7 @@ function Chip({
       className={cn(
         'shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-150',
         active
-          ? 'border-accent bg-accent text-white shadow-sm'
+          ? 'border-accent bg-accent text-ink shadow-sm'
           : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800',
       )}
     >

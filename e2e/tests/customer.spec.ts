@@ -8,7 +8,9 @@ test.describe('a customer', () => {
 
     // 1. a visitor adds something – no account needed yet
     await page.goto('/');
-    await page.getByRole('button', { name: 'Add MSI MEG Z790 ACE to cart' }).click();
+    await page
+      .getByRole('button', { name: 'Add ASUS ROG Strix Z690-A Gaming WiFi to cart' })
+      .click();
     await page.getByRole('link', { name: 'Cart, 1 item' }).click();
 
     // 2. "Log in to check out" -> create an account; the cart follows the visitor into the account
@@ -21,18 +23,18 @@ test.describe('a customer', () => {
     await expect(page).toHaveURL(/\/checkout$/);
     await expect(page.getByRole('heading', { name: 'Checkout' })).toBeVisible();
     const summary = page.getByRole('complementary', { name: 'Order summary' });
-    await expect(summary).toContainText('1 × MSI MEG Z790 ACE');
-    await expect(summary).toContainText('Total$701.79'); // 699.99 + 1.80 delivery, computed by the server
+    await expect(summary).toContainText('1 × ASUS ROG Strix Z690-A Gaming WiFi');
+    await expect(summary).toContainText('Total$351.79'); // 349.99 + 1.80 delivery, computed by the server
 
     // 3. address is validated
     await page.getByRole('button', { name: /Continue to payment/ }).click();
     await expect(page.getByText('Address must be at least 3 characters')).toBeVisible();
     await fillAddress(page);
-    await page.getByRole('button', { name: /Continue to payment · \$701\.79/ }).click();
+    await page.getByRole('button', { name: /Continue to payment · \$351\.79/ }).click();
 
     // 4. the (simulated) payment page: cancel first
     await expect(page.getByRole('heading', { name: 'Test payment' })).toBeVisible();
-    await expect(page.getByText('$701.79', { exact: true })).toBeVisible();
+    await expect(page.getByText('$351.79', { exact: true })).toBeVisible();
     await page.getByRole('button', { name: 'Cancel payment' }).click();
     await expect(page.getByRole('heading', { name: 'Payment not completed' })).toBeVisible();
     // nothing was lost: the cart is still there
@@ -41,7 +43,7 @@ test.describe('a customer', () => {
     // 5. try again and pay
     await page.getByRole('button', { name: 'Try payment again' }).click();
     await expect(page.getByRole('heading', { name: 'Test payment' })).toBeVisible();
-    await page.getByRole('button', { name: 'Pay $701.79' }).click();
+    await page.getByRole('button', { name: 'Pay $351.79' }).click();
     await expect(
       page.getByRole('heading', { name: /Thank you, your payment was received/ }),
     ).toBeVisible();
@@ -53,7 +55,7 @@ test.describe('a customer', () => {
     await expect(page.getByText('Paid', { exact: true })).toBeVisible();
     await expect(page.locator('[aria-current="step"]')).toContainText('Processing');
     await expect(page.getByText('12 Analytical Street')).toBeVisible();
-    await expect(page.getByText('1 × $699.99')).toBeVisible();
+    await expect(page.getByText('1 × $349.99')).toBeVisible();
 
     // 7. "most bought" counted the sale (once, by quantity) and the order is in the list
     await page.goto('/orders');

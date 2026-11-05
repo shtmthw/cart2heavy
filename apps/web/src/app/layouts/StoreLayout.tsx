@@ -1,8 +1,9 @@
-import { Outlet, ScrollRestoration } from 'react-router';
+import { Outlet, ScrollRestoration, useLocation } from 'react-router';
 import { Footer } from './Footer';
 import { Header } from './Header';
 
 export function StoreLayout() {
+  const { pathname } = useLocation();
   return (
     <div className="flex min-h-dvh flex-col">
       <a
@@ -12,7 +13,7 @@ export function StoreLayout() {
         Skip to content
       </a>
       <Header />
-      <main id="main" className="flex-1 py-8">
+      <main id="main" key={pathname} className="animate-fade-up flex-1 py-8">
         <Outlet />
       </main>
       <Footer />

@@ -24,96 +24,96 @@ export interface SeedProduct {
 
 export const SEED_PRODUCTS: SeedProduct[] = [
   {
-    name: 'MSI MAG B760 TOMAHAWK WIFI',
+    name: 'ASUS ROG Strix B450-F Gaming',
     category: 'Motherboards',
-    priceCents: 21999,
-    image: 'msi-mag.jpg',
+    priceCents: 11999,
+    image: 'asus-b450-f.jpg',
     description:
-      'ATX motherboard for 12th–14th gen Intel Core (LGA 1700) with DDR5 memory, PCIe 5.0 x16, Wi-Fi 6E and a solid heatsink design. A dependable base for a gaming build.',
+      'ATX motherboard for AMD Ryzen processors (Socket AM4) with DDR4 memory, M.2 storage, RGB lighting and a gaming-focused audio design.',
   },
   {
-    name: 'MSI MPG B650 CARBON WIFI',
+    name: 'ASUS ROG Strix Z390-F Gaming',
     category: 'Motherboards',
-    priceCents: 29999,
-    image: 'msi-mpg.jpg',
+    priceCents: 20999,
+    image: 'asus-z390-f.jpg',
     description:
-      'ATX motherboard for AMD Ryzen 7000 and 8000 series (AM5) with DDR5, PCIe 5.0 M.2, Wi-Fi 6E and 2.5G LAN.',
+      'ATX motherboard for 8th and 9th gen Intel Core processors (LGA 1151) with DDR4 memory, dual M.2 slots and Aura Sync RGB.',
   },
   {
-    name: 'MSI MPG X670E CARBON WIFI',
+    name: 'ASUS ROG Strix Z390-H Gaming',
     category: 'Motherboards',
-    priceCents: 48999,
-    image: 'msi-x670.jpg',
+    priceCents: 19999,
+    image: 'asus-z390-h.jpg',
     description:
-      'High-end AM5 board for Ryzen 7000 and 8000 series with PCIe 5.0 graphics and storage, DDR5, Wi-Fi 6E and 2.5G LAN.',
+      'ATX motherboard for 8th and 9th gen Intel Core processors (LGA 1151) with built-in Wi-Fi, DDR4 memory and dual M.2 slots.',
   },
   {
-    name: 'MSI MEG Z790 ACE',
+    name: 'ASUS ROG Strix Z490-I Gaming',
     category: 'Motherboards',
-    priceCents: 69999,
-    image: 'msi-meg-ace.jpg',
+    priceCents: 25999,
+    image: 'asus-z490-i.jpg',
     description:
-      'Enthusiast LGA 1700 board with a 24+1+1 phase power design, DDR5 overclocking support, 10G and 2.5G LAN and Wi-Fi 6E.',
+      'Mini-ITX motherboard for 10th gen Intel Core processors (LGA 1200) with Wi-Fi 6, DDR4 memory and PCIe 3.0 M.2 – a full gaming platform in a small case.',
   },
   {
-    name: 'MSI MEG Z790 GODLIKE',
+    name: 'ASUS ROG Strix Z690-A Gaming WiFi',
     category: 'Motherboards',
-    priceCents: 109999,
-    image: 'msi-meg-godlike.jpg',
+    priceCents: 34999,
+    image: 'asus-z690-a.jpg',
     description:
-      'Flagship E-ATX board for Intel LGA 1700: top-tier power delivery, 10G LAN, Wi-Fi 6E and PCIe 5.0 storage.',
+      'ATX motherboard for 12th gen Intel Core processors (LGA 1700) with Wi-Fi 6, PCIe 5.0 graphics and multiple M.2 slots.',
   },
   {
     name: 'Apple iPhone 15 (128 GB)',
     category: 'Phones',
     priceCents: 79900,
-    image: 'smartphone.jpg',
+    image: 'iphone-15.jpg',
     description: '6.1-inch Super Retina XDR display, A16 Bionic chip, 48 MP main camera and USB-C.',
   },
   {
     name: 'Apple iPhone 15 Pro (256 GB)',
     category: 'Phones',
     priceCents: 109900,
-    image: 'smartphone.jpg',
+    image: 'iphone-15-pro.jpg',
     description: 'Titanium design, A17 Pro chip, 48 MP main camera with 3x telephoto and USB-C.',
   },
   {
-    name: 'Apple MacBook Air 13" (M3, 256 GB)',
+    name: 'Apple MacBook Air 13" (M2, 256 GB)',
     category: 'Laptops',
-    priceCents: 109900,
-    image: 'laptop.jpg',
+    priceCents: 99900,
+    image: 'macbook-air.jpg',
     description:
-      '13.6-inch Liquid Retina display, Apple M3 chip, 8 GB memory, fanless and up to 18 hours of battery life.',
+      '13.6-inch Liquid Retina display, Apple M2 chip, 8 GB memory, fanless design and up to 18 hours of battery life.',
   },
   {
     name: 'Apple MacBook Pro 14" (M3 Pro, 512 GB)',
     category: 'Laptops',
     priceCents: 199900,
-    image: 'laptop.jpg',
+    image: 'macbook-pro.jpg',
     description:
       '14.2-inch Liquid Retina XDR display, Apple M3 Pro chip, 18 GB memory and a long-lasting battery.',
   },
   {
-    name: 'Apple iMac 24" (M3, 256 GB)',
+    name: 'Apple iMac 24" (M4, 256 GB)',
     category: 'Desktops',
     priceCents: 129900,
-    image: 'desktop.jpg',
+    image: 'imac.jpg',
     description:
-      '24-inch 4.5K Retina display, Apple M3 chip, 8 GB memory, 1080p camera and a six-speaker sound system.',
+      '24-inch 4.5K Retina display, Apple M4 chip, 16 GB memory, 12 MP camera and a six-speaker sound system.',
   },
   {
-    name: 'Apple Mac mini (M2 Pro, 512 GB)',
+    name: 'Apple Mac mini (M4, 256 GB)',
     category: 'Desktops',
-    priceCents: 129900,
-    image: 'desktop.jpg',
+    priceCents: 59900,
+    image: 'mac-mini.jpg',
     description:
-      'Compact desktop with the Apple M2 Pro chip, 16 GB memory and Thunderbolt 4. Bring your own display.',
+      'Compact desktop with the Apple M4 chip, 16 GB memory and Thunderbolt ports. Bring your own display.',
   },
   {
     name: 'Apple Mac Studio (M2 Max, 512 GB)',
     category: 'Desktops',
     priceCents: 199900,
-    image: 'desktop.jpg',
+    image: 'mac-studio.jpg',
     description:
       'Apple M2 Max chip, 32 GB memory and a full set of ports in a compact studio-class desktop.',
   },
@@ -133,7 +133,7 @@ export const SEED_ORDERS: SeedOrder[] = [
   {
     hoursAgo: 14 * 24,
     lines: [
-      ['MSI MPG B650 CARBON WIFI', 1],
+      ['ASUS ROG Strix Z390-H Gaming', 1],
       ['Apple iPhone 15 (128 GB)', 2],
     ],
     paid: true,
@@ -141,22 +141,22 @@ export const SEED_ORDERS: SeedOrder[] = [
   },
   {
     hoursAgo: 9 * 24,
-    lines: [['Apple MacBook Air 13" (M3, 256 GB)', 1]],
+    lines: [['Apple MacBook Air 13" (M2, 256 GB)', 1]],
     paid: true,
     steps: ['confirmed', 'received', 'shipping', 'shipped', 'out_for_delivery', 'delivered'],
   },
   {
     hoursAgo: 4 * 24,
     lines: [
-      ['MSI MEG Z790 ACE', 1],
-      ['MSI MAG B760 TOMAHAWK WIFI', 1],
+      ['ASUS ROG Strix Z690-A Gaming WiFi', 1],
+      ['ASUS ROG Strix B450-F Gaming', 1],
     ],
     paid: true,
     steps: ['confirmed', 'received', 'shipping', 'shipped'],
   },
   {
     hoursAgo: 2 * 24,
-    lines: [['Apple iMac 24" (M3, 256 GB)', 1]],
+    lines: [['Apple iMac 24" (M4, 256 GB)', 1]],
     paid: true,
     steps: ['confirmed'],
   },
@@ -164,7 +164,7 @@ export const SEED_ORDERS: SeedOrder[] = [
     hoursAgo: 24,
     lines: [
       ['Apple iPhone 15 Pro (256 GB)', 1],
-      ['MSI MAG B760 TOMAHAWK WIFI', 2],
+      ['ASUS ROG Strix B450-F Gaming', 2],
     ],
     paid: true,
     steps: [],

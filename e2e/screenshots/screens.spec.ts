@@ -45,7 +45,7 @@ test('storefront', async ({ page, context }) => {
   await page.screenshot({ path: shot('home') });
 
   await page
-    .getByRole('link', { name: /MSI MEG Z790 GODLIKE/ })
+    .getByRole('link', { name: /ASUS ROG Strix Z390-F/ })
     .first()
     .click();
   await expect(page.getByRole('button', { name: 'Add to cart' })).toBeVisible();
@@ -54,7 +54,7 @@ test('storefront', async ({ page, context }) => {
 
   // instant search
   await page.goto('/');
-  await page.getByRole('combobox', { name: 'Search products' }).fill('msi');
+  await page.getByRole('combobox', { name: 'Search products' }).fill('asus');
   await expect(page.getByRole('listbox', { name: 'Suggestions' }).getByRole('option')).toHaveCount(
     5,
   );
@@ -69,7 +69,7 @@ test('cart, checkout and order tracking', async ({ page, context }) => {
   await expect(page.getByRole('button', { name: 'Account menu' })).toBeVisible();
 
   await page.goto('/');
-  await page.getByRole('button', { name: 'Add MSI MEG Z790 ACE to cart' }).click();
+  await page.getByRole('button', { name: 'Add ASUS ROG Strix Z690-A Gaming WiFi to cart' }).click();
   await page.getByRole('button', { name: 'Add Apple iPhone 15 Pro (256 GB) to cart' }).click();
   await expect(page.getByRole('link', { name: 'Cart, 2 items' })).toBeVisible();
   await page.goto('/cart');
@@ -131,7 +131,7 @@ test('logistics', async ({ page, context }) => {
   await page.screenshot({ path: shot('logistics') });
 });
 
-test('mobile and dark mode', async ({ browser }) => {
+test('mobile', async ({ browser }) => {
   const phone = await browser.newContext({
     viewport: { width: 390, height: 844 },
     deviceScaleFactor: 2,
@@ -151,17 +151,4 @@ test('mobile and dark mode', async ({ browser }) => {
   await settle(mobile);
   await mobile.screenshot({ path: shot('mobile-cart') });
   await phone.close();
-
-  const dark = await browser.newContext({
-    viewport: { width: 1280, height: 800 },
-    colorScheme: 'dark',
-    reducedMotion: 'reduce',
-  });
-  await hideToasts(dark);
-  const page = await dark.newPage();
-  await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Most bought' })).toBeVisible();
-  await settle(page);
-  await page.screenshot({ path: shot('home-dark') });
-  await dark.close();
 });

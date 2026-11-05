@@ -75,11 +75,11 @@ deletes it and the next start begins with fresh demo data.
 
 ![Logistics queue](docs/screenshots/logistics.png)
 
-It is responsive and follows the operating system's light/dark setting.
+It is responsive and works on phones.
 
-|                                             |                                                  |                                              |
-| ------------------------------------------- | ------------------------------------------------ | -------------------------------------------- |
-| ![Mobile](docs/screenshots/mobile-home.png) | ![Mobile cart](docs/screenshots/mobile-cart.png) | ![Dark mode](docs/screenshots/home-dark.png) |
+|                                             |                                                  |
+| ------------------------------------------- | ------------------------------------------------ |
+| ![Mobile](docs/screenshots/mobile-home.png) | ![Mobile cart](docs/screenshots/mobile-cart.png) |
 
 ---
 
@@ -233,6 +233,28 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 
 `docker compose up` uses `matthew552/cart2heavy:latest` (pulled from Docker Hub, or built from the
 checkout when it is not there); `docker compose up --build` always builds the image from the checkout.
+
+## Photo credits
+
+The demo product photos come from [Wikimedia Commons](https://commons.wikimedia.org/) and keep their
+original licenses. Exact photos of some products are not available under a free license, so a few show
+a close relative of the product (for example the ASUS boards are older ROG Strix models). Replace any of
+them in the admin panel (Products → Edit).
+
+| Product photo         | Source                                                                                                                                                                    | Author             | License       |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------- |
+| ASUS ROG Strix B450-F | [Asus ROG Strix B450-F with AMD Ryzen 3.jpg](https://commons.wikimedia.org/wiki/File:Asus_ROG_Strix_B450-F_with_AMD_Ryzen_3.jpg)                                          | Oligopolism        | CC0           |
+| ASUS ROG Strix Z690-A | [2023 Płyta główna Asus ROG STRIX Z690-A GAMING WIFI.jpg](https://commons.wikimedia.org/wiki/File:2023_P%C5%82yta_g%C5%82%C3%B3wna_Asus_ROG_STRIX_Z690-A_GAMING_WIFI.jpg) | Jacek Halicki      | CC BY-SA 4.0  |
+| ASUS ROG Strix Z390-F | [Asus-ROG-Strix-Z390-F-Gaming-Motherboard 20201120 DSC6025.jpg](https://commons.wikimedia.org/wiki/File:Asus-ROG-Strix-Z390-F-Gaming-Motherboard_20201120_DSC6025.jpg)    | PantheraLeo1359531 | CC BY 4.0     |
+| ASUS ROG Strix Z390-H | [Asus ROG Strix Z390-H motherboard.JPG](https://commons.wikimedia.org/wiki/File:Asus_ROG_Strix_Z390-H_motherboard.JPG)                                                    | MKFI               | Public domain |
+| ASUS ROG Strix Z490-I | [ASUS ROG STRIX Z490-I GAMING.png](https://commons.wikimedia.org/wiki/File:ASUS_ROG_STRIX_Z490-I_GAMING.png)                                                              | ASUS               | CC BY-SA 4.0  |
+| iPhone 15             | [Back of iPhone 15.jpg](https://commons.wikimedia.org/wiki/File:Back_of_iPhone_15.jpg)                                                                                    | ThePhotoGraphIc    | CC BY-SA 4.0  |
+| iPhone 15 Pro         | [Apple iPhone 15 Pro.jpg](https://commons.wikimedia.org/wiki/File:Apple_iPhone_15_Pro.jpg)                                                                                | IPHONE 15          | CC BY-SA 4.0  |
+| MacBook Air           | [MacBook Air (A2681) front.jpg](<https://commons.wikimedia.org/wiki/File:MacBook_Air_(A2681)_front.jpg>)                                                                  | メイド理世         | CC BY-SA 4.0  |
+| MacBook Pro 14"       | [M3 Macbook Pro 14 inch Space Grey model.jpg](https://commons.wikimedia.org/wiki/File:M3_Macbook_Pro_14_inch_Space_Grey_model.jpg)                                        | Kyu3a              | CC BY-SA 4.0  |
+| iMac 24"              | [IMac M4 2024.jpg](https://commons.wikimedia.org/wiki/File:IMac_M4_2024.jpg)                                                                                              | Seasider53         | CC BY 4.0     |
+| Mac mini              | [Mac mini (M4, 2024) - Backside.jpg](<https://commons.wikimedia.org/wiki/File:Mac_mini_(M4,_2024)_-_Backside.jpg>)                                                        | AzureSaturn        | CC0           |
+| Mac Studio            | [Mac Studio (2022) front.jpg](<https://commons.wikimedia.org/wiki/File:Mac_Studio_(2022)_front.jpg>)                                                                      | Yasu (talk)        | CC BY-SA 3.0  |
 
 ---
 

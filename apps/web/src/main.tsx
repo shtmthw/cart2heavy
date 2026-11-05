@@ -1,3 +1,3 @@
-import { SHARED_PACKAGE } from '@cart2heavy/shared';
+import { formatCents } from '@cart2heavy/shared';
 
-console.log(`web scaffold using ${SHARED_PACKAGE}`);
+console.log(`web scaffold – ${formatCents(250)}`);

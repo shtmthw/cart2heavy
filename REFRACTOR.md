@@ -398,9 +398,9 @@ Each phase ends with something that runs. Commits are made per phase on a branch
 - **Done when:** `pnpm install && pnpm typecheck && pnpm lint` pass on the empty scaffold.
 
 ### Phase 2 — Shared package
-- [ ] Zod schemas + inferred types: auth, user, product, category, cart, address, order, pagination,
+- [x] Zod schemas + inferred types: auth, user, product, category, cart, address, order, pagination,
       API error shape.
-- [ ] `OrderStatus` (+ allowed transitions, labels shown to the user), `Weight`, money helpers
+- [x] `OrderStatus` (+ allowed transitions, labels shown to the user), `Weight`, money helpers
       (`formatCents`, `toCents`).
 - **Done when:** builds and both apps import it.
 
@@ -509,3 +509,5 @@ Each phase ends with something that runs. Commits are made per phase on a branch
 - 2026-11-05 — Phase 1 done: pnpm workspace, strict TS 6.0 (typescript-eslint doesn't support TS 7 yet), ESLint 10 flat config, Prettier,
   `.gitignore`/`.dockerignore`/`.env.example`, scaffolds for `packages/shared`, `apps/api`, `apps/web`; `Backend/node_modules` + `Backend/.env`
   untracked. `pnpm typecheck && pnpm lint && pnpm test` pass.
+- 2026-11-05 — Phase 2 done: `packages/shared` has the enums/labels, money helpers (integer cents), order-status rules, Zod schemas and
+  wire DTO types; 15 unit tests. Small additions to the API list: `GET /api/config` (shop rules for the guest cart) and `GET /products?ids=` (to render a guest cart).

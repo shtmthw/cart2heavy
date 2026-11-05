@@ -258,31 +258,6 @@ The default configuration is intended for local demonstrations and testing. Befo
 7. Configure Stripe with your live payment credentials.
 8. Back up the `mongo-data` and `uploads` Docker volumes regularly.
 
-### Creating accounts
-
-The application includes a command for creating accounts from inside the running container.
-
-For example, to create an administrator:
-
-```bash
-docker compose exec app node dist/create-user.js \
-  --role admin \
-  --email you@example.com \
-  --name "Your Name"
-```
-
-Supported roles:
-
-- `admin`
-- `logistics`
-- `customer`
-
-Without `--password`, the application generates a random password and prints it once.
-
-Public registration is restricted to customer accounts.
-
----
-
 ## Photo credits
 
 The demo product photos come from [Wikimedia Commons](https://commons.wikimedia.org/) and retain their original licenses.

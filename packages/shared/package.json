@@ -1,0 +1,17 @@
+{
+  "name": "@cart2heavy/shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Zod schemas, DTO types and small helpers shared by the API and the web app.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
+}

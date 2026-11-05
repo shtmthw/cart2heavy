@@ -1,0 +1,34 @@
+{
+  "name": "cart2heavy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A small full-stack shop (storefront, admin, logistics) in TypeScript.",
+  "type": "module",
+  "packageManager": "pnpm@12.15.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter @cart2heavy/api --filter @cart2heavy/web dev",
+    "build": "pnpm --filter @cart2heavy/shared build && pnpm --filter @cart2heavy/web build && pnpm --filter @cart2heavy/api build",
+    "typecheck": "pnpm -r --workspace-concurrency=1 typecheck",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "pnpm -r --workspace-concurrency=1 test",
+    "seed": "pnpm --filter @cart2heavy/api seed",
+    "e2e": "playwright test",
+    "screenshots": "playwright test --config e2e/playwright.screenshots.config.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.19.2",
+    "eslint": "^10.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "prettier": "^3.9.10",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.1"
+  }
+}

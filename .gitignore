@@ -1,0 +1,27 @@
+# dependencies & build output
+node_modules
+dist
+coverage
+*.tsbuildinfo
+.pnpm-store
+
+# environment (secrets never go in git; see .env.example)
+.env
+.env.*
+!.env.example
+
+# runtime data
+uploads
+apps/api/uploads
+*.log
+
+# tests
+playwright-report
+test-results
+.playwright
+
+# editors / OS
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json

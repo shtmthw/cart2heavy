@@ -1,6 +1,6 @@
 # REFRACTOR.md — cart2heavy → TypeScript
 
-> Status: **PLAN READY — waiting for your go** · Author: Claude (with Matthew) · Date: 2026-11-05
+> Status: **IN PROGRESS — implementing on `refactor/typescript`** · Author: Claude (with Matthew) · Date: 2026-11-05
 >
 > This document is the step-by-step plan for rewriting cart2heavy in TypeScript, making it work
 > better, giving it a minimal UI, dockerizing it, and publishing the image to Docker Hub. Each
@@ -390,11 +390,11 @@ Port **8080** instead of 5000 because macOS uses 5000 for AirPlay. Can be change
 Each phase ends with something that runs. Commits are made per phase on a branch (see §9).
 
 ### Phase 1 — Clean slate & tooling
-- [ ] Branch `refactor/typescript`.
-- [ ] Root `package.json` (pnpm workspaces), `pnpm-workspace.yaml`, `tsconfig.base.json` (strict),
+- [x] Branch `refactor/typescript`.
+- [x] Root `package.json` (pnpm workspaces), `pnpm-workspace.yaml`, `tsconfig.base.json` (strict),
       ESLint + Prettier, `.gitignore`, `.dockerignore`, `.env.example`, `.nvmrc`.
-- [ ] Remove the committed `Backend/node_modules` and `Backend/.env` from git.
-- [ ] Scaffold `packages/shared`, `apps/api`, `apps/web`.
+- [x] Remove the committed `Backend/node_modules` and `Backend/.env` from git.
+- [x] Scaffold `packages/shared`, `apps/api`, `apps/web`.
 - **Done when:** `pnpm install && pnpm typecheck && pnpm lint` pass on the empty scaffold.
 
 ### Phase 2 — Shared package
@@ -506,3 +506,6 @@ Each phase ends with something that runs. Commits are made per phase on a branch
 - 2026-11-05 — Read the whole codebase, wrote this plan.
 - 2026-11-05 — Decisions made (§9): one image `matthew552/cart2heavy`, one app with role logins,
   secrets removed from now on (history kept), commit per phase on `refactor/typescript`, no push.
+- 2026-11-05 — Phase 1 done: pnpm workspace, strict TS 6.0 (typescript-eslint doesn't support TS 7 yet), ESLint 10 flat config, Prettier,
+  `.gitignore`/`.dockerignore`/`.env.example`, scaffolds for `packages/shared`, `apps/api`, `apps/web`; `Backend/node_modules` + `Backend/.env`
+  untracked. `pnpm typecheck && pnpm lint && pnpm test` pass.

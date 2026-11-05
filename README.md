@@ -147,7 +147,6 @@ The storefront, admin panel, and logistics panel are designed to work on mobile 
 - Admin tables adapt into mobile-friendly cards.
 - Logistics provides a large, accessible action for advancing each order.
 
----
 
 ## Configuration
 

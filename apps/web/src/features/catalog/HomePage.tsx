@@ -41,10 +41,10 @@ function Chip({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        'rounded-full border px-3 py-1 text-sm transition-colors',
+        'shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-150',
         active
-          ? 'border-accent bg-accent text-white'
-          : 'border-zinc-300 hover:bg-zinc-100 dark:border-zinc-700 dark:hover:bg-zinc-800',
+          ? 'border-accent bg-accent text-white shadow-sm'
+          : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800',
       )}
     >
       {children}
@@ -64,11 +64,11 @@ export function HomePage() {
 
   return (
     <Container>
-      <section className="mb-8 max-w-3xl">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+      <section className="mb-10 max-w-3xl pt-2 sm:pt-6">
+        <h1 className="text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl">
           Everything for your build, delivered heavy.
         </h1>
-        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+        <p className="mt-3 text-base text-zinc-600 sm:text-lg dark:text-zinc-400">
           Motherboards, laptops, phones and desktops – ordered in a minute, tracked to your door.
         </p>
       </section>
@@ -76,8 +76,12 @@ export function HomePage() {
       {!category && page === 1 && <MostBought />}
 
       <section aria-label="Products">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Categories">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-x-3 gap-y-3">
+          <div
+            className="no-scrollbar -mx-4 flex w-[calc(100%+2rem)] min-w-0 gap-2 overflow-x-auto px-4 py-1 sm:mx-0 sm:w-auto sm:flex-1 sm:flex-wrap sm:px-0"
+            role="group"
+            aria-label="Categories"
+          >
             <Chip
               active={!category}
               onClick={() => update({ category: undefined, page: undefined })}
@@ -98,6 +102,7 @@ export function HomePage() {
           </div>
           <CompactSelect
             label="Sort products"
+            prefix="Sort"
             value={sort}
             onChange={(event) =>
               update({

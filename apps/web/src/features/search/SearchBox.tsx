@@ -65,7 +65,7 @@ export function SearchBox({ className }: { className?: string }) {
   return (
     <div ref={rootRef} className={cn('relative', className)} role="search">
       <Search
-        className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-400"
+        className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-zinc-400"
         aria-hidden
       />
       <input
@@ -86,14 +86,14 @@ export function SearchBox({ className }: { className?: string }) {
         }}
         onFocus={() => setOpen(true)}
         onKeyDown={onKeyDown}
-        className="h-10 w-full rounded-md border border-zinc-300 bg-white pr-3 pl-9 text-sm placeholder:text-zinc-400 focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-accent dark:border-zinc-700 dark:bg-zinc-900"
+        className="h-11 w-full rounded-full border border-zinc-200 bg-white pr-4 pl-10 text-sm shadow-sm transition-all placeholder:text-zinc-400 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/15 dark:border-zinc-700 dark:bg-zinc-900"
       />
       <ul
         id={listId}
         role="listbox"
         aria-label="Suggestions"
         hidden={!showList}
-        className="absolute top-full right-0 left-0 z-30 mt-1 overflow-hidden rounded-md border border-zinc-200 bg-white shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
+        className="absolute top-full right-0 left-0 z-30 mt-2 overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900"
       >
         {options.map((product, index) => (
           <li

@@ -12,9 +12,15 @@
 @layer base {
   html {
     color-scheme: light dark;
+    scroll-behavior: smooth;
   }
   body {
-    @apply bg-white text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100;
+    @apply bg-zinc-50 text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100;
+    -webkit-tap-highlight-color: transparent;
+  }
+  ::selection {
+    background: var(--color-accent-soft);
+    color: oklch(0.3 0.12 277);
   }
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-accent;
@@ -28,5 +34,15 @@
       animation-duration: 0.01ms !important;
       transition-duration: 0.01ms !important;
     }
+  }
+}
+
+@layer utilities {
+  /* horizontal scrollers (chips, "most bought" on phones) without a visible scrollbar */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }

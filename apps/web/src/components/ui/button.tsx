@@ -11,12 +11,12 @@ export function buttonStyles({
   size = 'md',
 }: { variant?: Variant; size?: Size } = {}) {
   return cn(
-    'inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors',
+    'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-150 active:scale-[0.98]',
     'disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50',
     size === 'sm' ? 'h-8 px-3 text-sm' : 'h-10 px-4 text-sm',
-    variant === 'primary' && 'bg-accent text-white hover:bg-accent-hover',
+    variant === 'primary' && 'bg-accent text-white shadow-sm hover:bg-accent-hover',
     variant === 'secondary' &&
-      'border border-zinc-300 bg-white text-zinc-900 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800',
+      'border border-zinc-200 bg-white text-zinc-900 shadow-sm hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800',
     variant === 'ghost' &&
       'text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800',
     variant === 'danger' && 'bg-red-600 text-white hover:bg-red-700',

@@ -13,8 +13,8 @@ test('an order goes from processing to delivered, and the customer sees each ste
   // --- the customer buys a phone and a motherboard
   const shopper = await signUp(customer);
   await customer.goto('/');
-  await customer.getByRole('button', { name: 'Add Smartphone 128 GB to cart' }).click();
-  await customer.getByRole('button', { name: 'Add MSI MAG Gaming Motherboard to cart' }).click();
+  await customer.getByRole('button', { name: 'Add Apple iPhone 15 (128 GB) to cart' }).click();
+  await customer.getByRole('button', { name: 'Add MSI MAG B760 TOMAHAWK WIFI to cart' }).click();
   await customer.getByRole('link', { name: 'Cart, 2 items' }).click();
   await customer.getByRole('button', { name: 'Checkout' }).click();
   await fillAddress(customer);
@@ -38,7 +38,7 @@ test('an order goes from processing to delivered, and the customer sees each ste
   await admin.getByRole('button', { name: `Open order ${orderNumber}` }).click();
   const dialog = admin.getByRole('dialog');
   await expect(dialog).toContainText(shopper.email);
-  await expect(dialog).toContainText('Smartphone 128 GB');
+  await expect(dialog).toContainText('Apple iPhone 15 (128 GB)');
   await dialog.getByRole('button', { name: 'Confirm order' }).click();
   await expect(admin.getByText('Order confirmed')).toBeVisible();
 
@@ -111,7 +111,7 @@ test('the admin can cancel an order that is still processing', async ({
 }) => {
   await signUp(customer);
   await customer.goto('/');
-  await customer.getByRole('button', { name: 'Add Smartphone Pro 256 GB to cart' }).click();
+  await customer.getByRole('button', { name: 'Add Apple iPhone 15 Pro (256 GB) to cart' }).click();
   await customer.getByRole('link', { name: 'Cart, 1 item' }).click();
   await customer.getByRole('button', { name: 'Checkout' }).click();
   await fillAddress(customer);

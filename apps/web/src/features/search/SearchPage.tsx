@@ -42,6 +42,7 @@ export function SearchPage() {
         actions={
           <CompactSelect
             label="Sort results"
+            prefix="Sort"
             value={sort}
             onChange={(event) =>
               update({

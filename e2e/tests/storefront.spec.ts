@@ -16,7 +16,7 @@ test.describe('storefront', () => {
     await expect(page).toHaveURL(/category=laptops/);
     const cards = page.getByRole('heading', { level: 3 });
     await expect(cards).toHaveCount(2);
-    await expect(cards.first()).toContainText('Ultrabook');
+    await expect(cards.first()).toContainText('MacBook');
     await expect(page.getByRole('button', { name: 'Laptops' })).toHaveAttribute(
       'aria-pressed',
       'true',
@@ -58,15 +58,15 @@ test.describe('storefront', () => {
   test('a product page survives a refresh (the old app broke here)', async ({ page }) => {
     await page.goto('/');
     await page
-      .getByRole('link', { name: /MSI MEG ACE/ })
+      .getByRole('link', { name: /MSI MEG Z790 ACE/ })
       .first()
       .click();
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('MSI MEG ACE Motherboard');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('MSI MEG Z790 ACE');
     const url = page.url();
     await page.reload();
     await expect(page).toHaveURL(url);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('MSI MEG ACE Motherboard');
-    await expect(page.getByText('$689.00').first()).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('MSI MEG Z790 ACE');
+    await expect(page.getByText('$699.99').first()).toBeVisible();
 
     await page.goto('/products/507f1f77bcf86cd799439011');
     await expect(page.getByText('This product is not available')).toBeVisible();
@@ -78,7 +78,7 @@ test.describe('storefront', () => {
     await box.fill('godlike');
     const list = page.getByRole('listbox', { name: 'Suggestions' });
     await expect(list.getByRole('option')).toHaveCount(1);
-    await expect(list).toContainText('MSI MEG GODLIKE');
+    await expect(list).toContainText('GODLIKE');
 
     await box.fill('msi');
     await expect(list.getByRole('option')).toHaveCount(5);
@@ -100,35 +100,37 @@ test.describe('storefront', () => {
     await expect(page.getByText('No products found')).toBeVisible();
 
     // choosing a suggestion with the keyboard opens the product
-    await box.fill('smartphone pro');
+    await box.fill('iphone 15 pro');
     await expect(list.getByRole('option')).toHaveCount(1);
     await box.press('ArrowDown');
     await box.press('Enter');
     await expect(page).toHaveURL(/\/products\//);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Smartphone Pro 256 GB');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      'Apple iPhone 15 Pro (256 GB)',
+    );
   });
 
   test('the guest cart lives in the browser, survives a reload and shows the minimum order rule', async ({
     page,
   }) => {
     await page.goto('/');
-    await page.getByRole('button', { name: 'Add MSI MAG Gaming Motherboard to cart' }).click();
-    await expect(page.getByText('MSI MAG Gaming Motherboard added to your cart')).toBeVisible();
+    await page.getByRole('button', { name: 'Add MSI MAG B760 TOMAHAWK WIFI to cart' }).click();
+    await expect(page.getByText('MSI MAG B760 TOMAHAWK WIFI added to your cart')).toBeVisible();
     await page.reload();
     await expect(page.getByRole('link', { name: 'Cart, 1 item' })).toBeVisible();
 
     await page.getByRole('link', { name: 'Cart, 1 item' }).click();
     await expect(page.getByRole('heading', { name: 'Your cart' })).toBeVisible();
     const summary = page.getByRole('complementary', { name: 'Order summary' });
-    await expect(summary).toContainText('Subtotal$199.00');
+    await expect(summary).toContainText('Subtotal$219.99');
     await expect(summary).toContainText('Delivery$1.80');
-    await expect(summary).toContainText('Total$200.80');
+    await expect(summary).toContainText('Total$221.79');
 
     await page.getByRole('button', { name: 'Increase quantity' }).click();
-    await expect(summary).toContainText('Subtotal$398.00');
+    await expect(summary).toContainText('Subtotal$439.98');
     await expect(page.getByRole('link', { name: 'Cart, 2 items' })).toBeVisible();
 
-    await page.getByRole('button', { name: 'Remove MSI MAG Gaming Motherboard' }).click();
+    await page.getByRole('button', { name: 'Remove MSI MAG B760 TOMAHAWK WIFI' }).click();
     await expect(page.getByText('Your cart is empty')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Cart, empty' })).toBeVisible();
   });

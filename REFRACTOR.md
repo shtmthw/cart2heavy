@@ -596,3 +596,5 @@ image is ~312 MB unpacked (target was 250); the compose ports listen on 127.0.0.
 `create-user` and `docker-compose.dev.yml` were added.
 - 2026-11-05 — Phase 10 prepared, not finished: multi-arch build verified locally, fresh-clone `docker compose up` verified (builds locally), final
   `pnpm e2e` 19/19 green. Waiting for the Docker Hub push (see Phase 10 above).
+- 2026-11-05 — Follow-up: seed catalog now uses real product names/prices (MSI boards, Apple devices; photos are still the old placeholders), UI polish
+  (soft page background, rounder cards/controls, pill sort select, bigger logo shifted right, mobile chip/scroll fixes), Instagram link removed.

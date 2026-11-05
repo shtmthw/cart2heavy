@@ -236,4 +236,4 @@ checkout when it is not there); `docker compose up --build` always builds the im
 
 ---
 
-Made and founded by [Matthew Baroi](https://github.com/shtmthw) · [Instagram](https://www.instagram.com/sht_matthew/)
+Made and founded by [Matthew Baroi](https://github.com/shtmthw)

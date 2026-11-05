@@ -14,15 +14,15 @@ export function MostBought() {
     <section aria-labelledby="most-bought" className="mb-10">
       <h2
         id="most-bought"
-        className="mb-3 text-sm font-semibold tracking-wide text-zinc-500 uppercase"
+        className="mb-3 text-xs font-semibold tracking-widest text-zinc-500 uppercase"
       >
         Most bought
       </h2>
-      <ol className="grid gap-3 sm:grid-cols-3">
+      <ol className="no-scrollbar -mx-4 flex scroll-pl-4 snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0">
         {top.map((product, index) => (
-          <li key={product.id}>
+          <li key={product.id} className="w-[78%] shrink-0 snap-start sm:w-auto">
             <Link to={`/products/${product.id}`} className="block">
-              <Card className="flex items-center gap-3 p-3 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/60">
+              <Card className="flex items-center gap-3 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
                 <span className="w-5 text-center text-lg font-semibold text-accent tabular-nums">
                   {index + 1}
                 </span>

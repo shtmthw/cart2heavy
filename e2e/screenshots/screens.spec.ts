@@ -45,7 +45,7 @@ test('storefront', async ({ page, context }) => {
   await page.screenshot({ path: shot('home') });
 
   await page
-    .getByRole('link', { name: /MSI MEG GODLIKE/ })
+    .getByRole('link', { name: /MSI MEG Z790 GODLIKE/ })
     .first()
     .click();
   await expect(page.getByRole('button', { name: 'Add to cart' })).toBeVisible();
@@ -69,8 +69,8 @@ test('cart, checkout and order tracking', async ({ page, context }) => {
   await expect(page.getByRole('button', { name: 'Account menu' })).toBeVisible();
 
   await page.goto('/');
-  await page.getByRole('button', { name: 'Add MSI MEG ACE Motherboard to cart' }).click();
-  await page.getByRole('button', { name: 'Add Smartphone Pro 256 GB to cart' }).click();
+  await page.getByRole('button', { name: 'Add MSI MEG Z790 ACE to cart' }).click();
+  await page.getByRole('button', { name: 'Add Apple iPhone 15 Pro (256 GB) to cart' }).click();
   await expect(page.getByRole('link', { name: 'Cart, 2 items' })).toBeVisible();
   await page.goto('/cart');
   await expect(page.getByRole('heading', { name: 'Your cart' })).toBeVisible();
@@ -145,7 +145,7 @@ test('mobile and dark mode', async ({ browser }) => {
   await expect(mobile.getByRole('heading', { name: 'Most bought' })).toBeVisible();
   await settle(mobile);
   await mobile.screenshot({ path: shot('mobile-home') });
-  await mobile.getByRole('button', { name: 'Add Smartphone 128 GB to cart' }).click();
+  await mobile.getByRole('button', { name: 'Add Apple iPhone 15 (128 GB) to cart' }).click();
   await mobile.goto('/cart');
   await expect(mobile.getByRole('heading', { name: 'Your cart' })).toBeVisible();
   await settle(mobile);

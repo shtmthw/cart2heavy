@@ -31,10 +31,10 @@ export function Dialog({
       onClick={(event) => {
         if (event.target === ref.current) onClose(); // click on the backdrop
       }}
-      className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-2xl border border-zinc-200 bg-white p-0 text-zinc-900 shadow-2xl backdrop:bg-zinc-950/50 backdrop:backdrop-blur-[2px] dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+      className="m-auto w-[calc(100%-2rem)] max-w-lg rounded-2xl max-sm:mx-0 max-sm:mt-auto max-sm:mb-0 max-sm:max-h-[92dvh] max-sm:w-full max-sm:max-w-full max-sm:rounded-b-none max-sm:animate-sheet border border-zinc-200 bg-white p-0 text-zinc-900 shadow-2xl backdrop:bg-zinc-950/50 backdrop:backdrop-blur-[2px] dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
     >
       {open && (
-        <div className="p-5">
+        <div className="p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
           <div className="mb-4 flex items-start justify-between gap-4">
             <h2 id={titleId} className="text-lg font-semibold">
               {title}
@@ -43,7 +43,7 @@ export function Dialog({
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="-m-1 rounded p-1 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              className="-m-2 rounded-full p-2 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
             >
               <X className="size-5" aria-hidden />
             </button>

@@ -211,51 +211,80 @@ export function OrdersPage() {
         <EmptyState title="No orders match these filters" />
       ) : (
         <>
-          <Table>
-            <thead>
-              <tr>
-                <Th>Order</Th>
-                <Th>Customer</Th>
-                <Th className="text-right">Total</Th>
-                <Th>Status</Th>
-                <Th>Payment</Th>
-                <Th className="text-right">
-                  <span className="sr-only">Actions</span>
-                </Th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.data.items.map((order) => (
-                <tr key={order.id}>
-                  <Td>
-                    <p className="font-medium">{shortOrderId(order.id)}</p>
-                    <p className="text-xs text-zinc-500">{formatDate(order.createdAt)}</p>
-                  </Td>
-                  <Td>
-                    <p>{order.customer?.name}</p>
-                    <p className="text-xs text-zinc-500">{order.email}</p>
-                  </Td>
-                  <Td className="text-right tabular-nums">{formatCents(order.totalCents)}</Td>
-                  <Td>
+          <ul className="space-y-3 md:hidden">
+            {orders.data.items.map((order) => (
+              <li key={order.id}>
+                <button
+                  type="button"
+                  aria-label={`Open order ${shortOrderId(order.id)}`}
+                  onClick={() => setSelectedId(order.id)}
+                  className="block w-full rounded-xl border border-zinc-200/80 bg-white p-4 text-left shadow-[0_1px_2px_rgb(0_0_0/0.04)] transition-colors active:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:active:bg-zinc-800"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-semibold">{shortOrderId(order.id)}</p>
+                      <p className="text-xs text-zinc-400">{formatDate(order.createdAt)}</p>
+                    </div>
+                    <p className="font-semibold tabular-nums">{formatCents(order.totalCents)}</p>
+                  </div>
+                  <p className="mt-2 truncate text-sm text-zinc-300">
+                    {order.customer?.name} · {order.email}
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
                     <StatusBadge status={order.status} />
-                  </Td>
-                  <Td>
                     <PaymentBadge status={order.payment.status} />
-                  </Td>
-                  <Td className="text-right">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      aria-label={`Open order ${shortOrderId(order.id)}`}
-                      onClick={() => setSelectedId(order.id)}
-                    >
-                      Open
-                    </Button>
-                  </Td>
+                  </div>
+                </button>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden md:block">
+            <Table>
+              <thead>
+                <tr>
+                  <Th>Order</Th>
+                  <Th>Customer</Th>
+                  <Th className="text-right">Total</Th>
+                  <Th>Status</Th>
+                  <Th>Payment</Th>
+                  <Th className="text-right">
+                    <span className="sr-only">Actions</span>
+                  </Th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {orders.data.items.map((order) => (
+                  <tr key={order.id}>
+                    <Td>
+                      <p className="font-medium">{shortOrderId(order.id)}</p>
+                      <p className="text-xs text-zinc-500">{formatDate(order.createdAt)}</p>
+                    </Td>
+                    <Td>
+                      <p>{order.customer?.name}</p>
+                      <p className="text-xs text-zinc-500">{order.email}</p>
+                    </Td>
+                    <Td className="text-right tabular-nums">{formatCents(order.totalCents)}</Td>
+                    <Td>
+                      <StatusBadge status={order.status} />
+                    </Td>
+                    <Td>
+                      <PaymentBadge status={order.payment.status} />
+                    </Td>
+                    <Td className="text-right">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        aria-label={`Open order ${shortOrderId(order.id)}`}
+                        onClick={() => setSelectedId(order.id)}
+                      >
+                        Open
+                      </Button>
+                    </Td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
           <Pagination
             page={orders.data.page}
             totalPages={orders.data.totalPages}

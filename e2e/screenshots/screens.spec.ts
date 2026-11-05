@@ -132,24 +132,59 @@ test('logistics', async ({ page, context }) => {
   await page.screenshot({ path: shot('logistics') });
 });
 
-test('mobile', async ({ browser }) => {
+test('phone: storefront, admin and logistics', async ({ browser }) => {
   const phone = await browser.newContext({
     viewport: { width: 390, height: 844 },
     deviceScaleFactor: 2,
-    isMobile: true,
     hasTouch: true,
     reducedMotion: 'reduce',
   });
   await hideToasts(phone);
-  const mobile = await phone.newPage();
-  await mobile.goto('/');
-  await expect(mobile.getByRole('heading', { name: 'Most bought' })).toBeVisible();
-  await settle(mobile);
-  await mobile.screenshot({ path: shot('mobile-home') });
-  await mobile.getByRole('button', { name: 'Add Apple iPhone 15 (128 GB) to cart' }).click();
-  await mobile.goto('/cart');
-  await expect(mobile.getByRole('heading', { name: 'Your cart' })).toBeVisible();
-  await settle(mobile);
-  await mobile.screenshot({ path: shot('mobile-cart') });
+  const page = await phone.newPage();
+
+  // storefront
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Most bought' })).toBeVisible();
+  await settle(page);
+  await page.screenshot({ path: shot('mobile-home') });
+  await page
+    .getByRole('link', { name: /ASUS ROG Strix Z390-F/ })
+    .first()
+    .click();
+  await expect(page.getByRole('button', { name: 'Add to cart' })).toBeVisible();
+  await settle(page);
+  await page.screenshot({ path: shot('mobile-product') });
+  await page.getByRole('button', { name: 'Add to cart' }).click();
+  await page.goto('/cart');
+  await expect(page.getByRole('heading', { name: 'Your cart' })).toBeVisible();
+  await settle(page);
+  await page.screenshot({ path: shot('mobile-cart') });
+
+  // admin
+  await logIn(page, 'admin');
+  await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+  await settle(page);
+  await page.screenshot({ path: shot('mobile-admin-dashboard') });
+  await page.goto('/admin/products');
+  await expect(page.getByRole('heading', { name: 'Products' })).toBeVisible();
+  await settle(page);
+  await page.screenshot({ path: shot('mobile-admin-products') });
+  await page.goto('/admin/orders?status=processing&payment=paid');
+  await page
+    .getByRole('button', { name: /^Open order/ })
+    .first()
+    .click();
+  await expect(
+    page.getByRole('dialog').getByRole('button', { name: 'Confirm order' }),
+  ).toBeVisible();
+  await settle(page);
+  await page.screenshot({ path: shot('mobile-admin-order') });
+
+  // logistics (its own account)
+  await page.context().clearCookies();
+  await logIn(page, 'logistics');
+  await expect(page.getByRole('heading', { name: 'Queue' })).toBeVisible();
+  await settle(page);
+  await page.screenshot({ path: shot('mobile-logistics') });
   await phone.close();
 });

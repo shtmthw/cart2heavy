@@ -2,7 +2,7 @@
 @import '@fontsource-variable/plus-jakarta-sans';
 @import 'tailwindcss';
 
-/* The whole site is one dark theme: slate #262833 for the page, a lighter slate for cards, lavender accent. */
+/* The whole site is one dark theme: slate #1C1E27 for the page, a lighter slate for cards, lavender accent. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -20,10 +20,10 @@
   --color-zinc-400: #b6bed6;
   --color-zinc-500: #a3abc4;
   --color-zinc-600: #8a92ac;
-  --color-zinc-700: #747a93;
-  --color-zinc-800: #484c61;
-  --color-zinc-900: #343747;
-  --color-zinc-950: #262833;
+  --color-zinc-700: #5a5f77;
+  --color-zinc-800: #3b3f53;
+  --color-zinc-900: #292c3a;
+  --color-zinc-950: #1c1e27;
 
   --font-sans:
     'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -35,6 +35,7 @@
 
   --animate-fade-up: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
   --animate-fade-in: fade-in 0.35s ease-out both;
+  --animate-sheet: sheet 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-pop: pop 0.18s cubic-bezier(0.22, 1, 0.36, 1) both;
 
   @keyframes fade-up {
@@ -53,6 +54,14 @@
     }
     to {
       opacity: 1;
+    }
+  }
+  @keyframes sheet {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: none;
     }
   }
   @keyframes pop {
@@ -103,8 +112,15 @@
 
 @layer components {
   /* modal dialogs and their backdrop ease in */
-  dialog[open] {
-    animation: pop 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+  @media (min-width: 640px) {
+    dialog[open] {
+      animation: pop 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+  }
+  @media (max-width: 639px) {
+    dialog[open] {
+      animation: sheet 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
   }
   dialog[open]::backdrop {
     animation: fade-in 0.25s ease-out both;

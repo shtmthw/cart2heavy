@@ -11,6 +11,7 @@ import {
   type CategoryDTO,
   type CategoryInput,
 } from '@cart2heavy/shared';
+import { Card } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { ConfirmDialog } from '../../components/ui/confirm-dialog';
@@ -124,30 +125,25 @@ export function CategoriesPage() {
       ) : categories.length === 0 ? (
         <EmptyState title="No categories yet">Add a category before you add products.</EmptyState>
       ) : (
-        <Table>
-          <thead>
-            <tr>
-              <Th>Name</Th>
-              <Th>Package size</Th>
-              <Th className="text-right">Products</Th>
-              <Th className="text-right">
-                <span className="sr-only">Actions</span>
-              </Th>
-            </tr>
-          </thead>
-          <tbody>
+        <>
+          <ul className="space-y-3 md:hidden">
             {categories.map((category) => (
-              <tr key={category.id}>
-                <Td className="font-medium">{category.name}</Td>
-                <Td>
-                  <Badge title={WEIGHT_LABELS[category.weight].hint}>
-                    {WEIGHT_LABELS[category.weight].code} · {WEIGHT_LABELS[category.weight].label}
-                  </Badge>
-                </Td>
-                <Td className="text-right tabular-nums">{category.productCount ?? 0}</Td>
-                <Td className="text-right whitespace-nowrap">
+              <li key={category.id}>
+                <Card className="flex items-center gap-3 p-4">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium">{category.name}</p>
+                    <div className="mt-1.5 flex items-center gap-2">
+                      <Badge>
+                        {WEIGHT_LABELS[category.weight].code} ·{' '}
+                        {WEIGHT_LABELS[category.weight].label}
+                      </Badge>
+                      <span className="text-xs text-zinc-400">
+                        {category.productCount ?? 0} products
+                      </span>
+                    </div>
+                  </div>
                   <Button
-                    variant="ghost"
+                    variant="secondary"
                     size="sm"
                     aria-label={`Edit ${category.name}`}
                     onClick={() => setEditing(category)}
@@ -155,18 +151,64 @@ export function CategoriesPage() {
                     <Pencil className="size-4" aria-hidden />
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant="secondary"
                     size="sm"
                     aria-label={`Delete ${category.name}`}
                     onClick={() => setDeleting(category)}
                   >
                     <Trash2 className="size-4" aria-hidden />
                   </Button>
-                </Td>
-              </tr>
+                </Card>
+              </li>
             ))}
-          </tbody>
-        </Table>
+          </ul>
+          <div className="hidden md:block">
+            <Table>
+              <thead>
+                <tr>
+                  <Th>Name</Th>
+                  <Th>Package size</Th>
+                  <Th className="text-right">Products</Th>
+                  <Th className="text-right">
+                    <span className="sr-only">Actions</span>
+                  </Th>
+                </tr>
+              </thead>
+              <tbody>
+                {categories.map((category) => (
+                  <tr key={category.id}>
+                    <Td className="font-medium">{category.name}</Td>
+                    <Td>
+                      <Badge title={WEIGHT_LABELS[category.weight].hint}>
+                        {WEIGHT_LABELS[category.weight].code} ·{' '}
+                        {WEIGHT_LABELS[category.weight].label}
+                      </Badge>
+                    </Td>
+                    <Td className="text-right tabular-nums">{category.productCount ?? 0}</Td>
+                    <Td className="text-right whitespace-nowrap">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        aria-label={`Edit ${category.name}`}
+                        onClick={() => setEditing(category)}
+                      >
+                        <Pencil className="size-4" aria-hidden />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        aria-label={`Delete ${category.name}`}
+                        onClick={() => setDeleting(category)}
+                      >
+                        <Trash2 className="size-4" aria-hidden />
+                      </Button>
+                    </Td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        </>
       )}
 
       <Dialog

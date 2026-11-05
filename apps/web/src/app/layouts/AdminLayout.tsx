@@ -4,7 +4,7 @@ import { AccountMenu } from './AccountMenu';
 
 const link = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'rounded-full px-3.5 py-1.5 text-sm font-medium whitespace-nowrap transition-colors',
+    'flex-1 rounded-full px-2 py-2 text-center text-sm font-medium whitespace-nowrap transition-colors sm:flex-none sm:px-3.5 sm:py-1.5',
     isActive
       ? 'bg-accent-soft text-accent'
       : 'text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800',

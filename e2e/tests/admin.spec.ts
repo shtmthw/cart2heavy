@@ -107,10 +107,13 @@ test.describe('admin catalog', () => {
     await page.goto('/admin/orders');
     await page.getByLabel('Filter by status').selectOption('delivered');
     await expect(page).toHaveURL(/status=delivered/);
-    for (const row of await page.getByRole('row').all()) {
-      if ((await row.getByRole('columnheader').count()) === 0)
-        await expect(row).toContainText('Delivered');
-    }
+    // only delivered orders are left in the list (the list refreshes, so wait for it)
+    await expect(page.getByRole('row').filter({ hasText: 'Delivered' }).first()).toBeVisible();
+    await expect(
+      page
+        .getByRole('row')
+        .filter({ hasText: /Processing|Confirmed|Cancelled|Shipped|Being shipped/ }),
+    ).toHaveCount(0);
     await page.getByLabel('Filter by payment').selectOption('pending');
     await expect(page.getByText('No orders match these filters')).toBeVisible();
   });

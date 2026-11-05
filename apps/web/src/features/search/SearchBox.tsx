@@ -86,7 +86,7 @@ export function SearchBox({ className }: { className?: string }) {
         }}
         onFocus={() => setOpen(true)}
         onKeyDown={onKeyDown}
-        className="h-11 w-full rounded-full border border-zinc-200 bg-white pr-4 pl-10 text-sm shadow-sm transition-all placeholder:text-zinc-400 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/15 dark:border-zinc-700 dark:bg-zinc-900"
+        className="h-11 w-full rounded-full border border-zinc-200 bg-white pr-4 pl-10 text-base shadow-sm sm:text-sm transition-all placeholder:text-zinc-400 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/15 dark:border-zinc-700 dark:bg-zinc-900"
       />
       <ul
         id={listId}

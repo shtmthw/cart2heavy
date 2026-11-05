@@ -93,9 +93,13 @@ function OrderCard({ order }: { order: OrderDTO }) {
         {address.phone}
       </address>
 
-      <div className="mt-4 flex justify-end">
+      <div className="mt-4 flex sm:justify-end">
         {next ? (
-          <Button loading={move.isPending} onClick={() => move.mutate(next)}>
+          <Button
+            className="w-full sm:w-auto"
+            loading={move.isPending}
+            onClick={() => move.mutate(next)}
+          >
             {ACTION_LABEL[next]} <ArrowRight className="size-4" aria-hidden />
           </Button>
         ) : (
@@ -140,7 +144,7 @@ export function LogisticsPage() {
       />
 
       {orders.isPending ? (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Skeleton className="h-72" />
           <Skeleton className="h-72" />
         </div>
@@ -151,7 +155,7 @@ export function LogisticsPage() {
           {filter === 'open' ? 'All confirmed orders are on their way.' : 'No orders in this step.'}
         </EmptyState>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {orders.data.map((order) => (
             <OrderCard key={order.id} order={order} />
           ))}

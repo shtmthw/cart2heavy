@@ -12,7 +12,7 @@ function MenuLink({ to, icon, children }: { to: string; icon: ReactNode; childre
     <Link
       to={to}
       role="menuitem"
-      className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+      className="flex items-center gap-2 px-3 py-3 text-sm hover:bg-zinc-100 sm:py-2 dark:hover:bg-zinc-800"
     >
       {icon}
       {children}
@@ -103,7 +103,7 @@ export function AccountMenu() {
             onClick={() =>
               logout.mutate(undefined, { onError: (e) => toast.error(errorMessage(e)) })
             }
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+            className="flex w-full items-center gap-2 px-3 py-3 text-left text-sm hover:bg-zinc-100 sm:py-2 dark:hover:bg-zinc-800"
           >
             <LogOut className={icon} aria-hidden />
             Log out

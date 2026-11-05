@@ -13,6 +13,7 @@ import {
   type CategoryDTO,
   type ProductDTO,
 } from '@cart2heavy/shared';
+import { Card } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { ConfirmDialog } from '../../components/ui/confirm-dialog';
@@ -175,7 +176,7 @@ function ProductFormDialogBody({
         error={errors.description?.message}
         {...register('description')}
       />
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <TextField
           label="Price (USD)"
           inputMode="decimal"
@@ -265,7 +266,7 @@ export function ProductsPage() {
 
       <div className="relative mb-4 max-w-xs">
         <Search
-          className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-400"
+          className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-zinc-400"
           aria-hidden
         />
         <input
@@ -277,7 +278,7 @@ export function ProductsPage() {
             setSearch(e.target.value);
             setPage(1);
           }}
-          className="h-10 w-full rounded-md border border-zinc-300 bg-white pr-3 pl-9 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+          className="h-11 w-full rounded-full border border-zinc-200 bg-white pr-4 pl-10 text-base shadow-sm focus-visible:border-accent focus-visible:ring-4 focus-visible:ring-accent/15 focus-visible:outline-none sm:h-10 sm:text-sm dark:border-zinc-700 dark:bg-zinc-900"
         />
       </div>
 
@@ -294,45 +295,32 @@ export function ProductsPage() {
         </EmptyState>
       ) : (
         <>
-          <Table>
-            <thead>
-              <tr>
-                <Th>Product</Th>
-                <Th>Category</Th>
-                <Th className="text-right">Price</Th>
-                <Th className="text-right">Bought</Th>
-                <Th>Status</Th>
-                <Th className="text-right">
-                  <span className="sr-only">Actions</span>
-                </Th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.data.items.map((product) => (
-                <tr key={product.id}>
-                  <Td>
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={product.imageUrl}
-                        alt=""
-                        className="size-10 shrink-0 rounded object-cover"
-                      />
-                      <span className="max-w-64 truncate font-medium">{product.name}</span>
+          <ul className="space-y-3 md:hidden">
+            {products.data.items.map((product) => (
+              <li key={product.id}>
+                <Card className="flex items-center gap-3 p-3">
+                  <img
+                    src={product.imageUrl}
+                    alt=""
+                    className="size-16 shrink-0 rounded-lg object-cover"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="line-clamp-2 text-sm leading-5 font-medium">{product.name}</p>
+                    <p className="mt-0.5 text-xs text-zinc-400">
+                      {product.category?.name ?? '—'} · {formatCents(product.priceCents)}
+                    </p>
+                    <div className="mt-1.5 flex items-center gap-2">
+                      {product.isActive ? (
+                        <Badge tone="success">Visible</Badge>
+                      ) : (
+                        <Badge>Hidden</Badge>
+                      )}
+                      <span className="text-xs text-zinc-400">{product.totalBought} bought</span>
                     </div>
-                  </Td>
-                  <Td>{product.category?.name ?? '—'}</Td>
-                  <Td className="text-right tabular-nums">{formatCents(product.priceCents)}</Td>
-                  <Td className="text-right tabular-nums">{product.totalBought}</Td>
-                  <Td>
-                    {product.isActive ? (
-                      <Badge tone="success">Visible</Badge>
-                    ) : (
-                      <Badge>Hidden</Badge>
-                    )}
-                  </Td>
-                  <Td className="text-right whitespace-nowrap">
+                  </div>
+                  <div className="flex shrink-0 flex-col gap-1">
                     <Button
-                      variant="ghost"
+                      variant="secondary"
                       size="sm"
                       aria-label={`Edit ${product.name}`}
                       onClick={() => setEditing(product)}
@@ -340,18 +328,78 @@ export function ProductsPage() {
                       <Pencil className="size-4" aria-hidden />
                     </Button>
                     <Button
-                      variant="ghost"
+                      variant="secondary"
                       size="sm"
                       aria-label={`Delete ${product.name}`}
                       onClick={() => setDeleting(product)}
                     >
                       <Trash2 className="size-4" aria-hidden />
                     </Button>
-                  </Td>
+                  </div>
+                </Card>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden md:block">
+            <Table>
+              <thead>
+                <tr>
+                  <Th>Product</Th>
+                  <Th>Category</Th>
+                  <Th className="text-right">Price</Th>
+                  <Th className="text-right">Bought</Th>
+                  <Th>Status</Th>
+                  <Th className="text-right">
+                    <span className="sr-only">Actions</span>
+                  </Th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {products.data.items.map((product) => (
+                  <tr key={product.id}>
+                    <Td>
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={product.imageUrl}
+                          alt=""
+                          className="size-10 shrink-0 rounded object-cover"
+                        />
+                        <span className="max-w-64 truncate font-medium">{product.name}</span>
+                      </div>
+                    </Td>
+                    <Td>{product.category?.name ?? '—'}</Td>
+                    <Td className="text-right tabular-nums">{formatCents(product.priceCents)}</Td>
+                    <Td className="text-right tabular-nums">{product.totalBought}</Td>
+                    <Td>
+                      {product.isActive ? (
+                        <Badge tone="success">Visible</Badge>
+                      ) : (
+                        <Badge>Hidden</Badge>
+                      )}
+                    </Td>
+                    <Td className="text-right whitespace-nowrap">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        aria-label={`Edit ${product.name}`}
+                        onClick={() => setEditing(product)}
+                      >
+                        <Pencil className="size-4" aria-hidden />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        aria-label={`Delete ${product.name}`}
+                        onClick={() => setDeleting(product)}
+                      >
+                        <Trash2 className="size-4" aria-hidden />
+                      </Button>
+                    </Td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
           <Pagination
             page={products.data.page}
             totalPages={products.data.totalPages}

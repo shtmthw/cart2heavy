@@ -8,6 +8,7 @@ import { Card } from '../../components/ui/card';
 import { EmptyState } from '../../components/ui/empty-state';
 import { Container, PageHeader } from '../../components/ui/page';
 import { QuantityStepper } from '../../components/ui/quantity-stepper';
+import { StickyBar } from '../../components/ui/sticky-bar';
 import { Skeleton } from '../../components/ui/skeleton';
 import { errorMessage } from '../../lib/api';
 import { useAuth } from '../../lib/auth';
@@ -55,10 +56,25 @@ export function CartPage() {
   const unavailable = cart.items.some((l) => !l.product.isActive);
   const missing = Math.max(0, cart.minOrderCents - cart.subtotalCents);
 
+  const cta = (className: string) =>
+    user ? (
+      <Button
+        className={className}
+        disabled={!cart.meetsMinimum || unavailable}
+        onClick={() => void navigate('/checkout')}
+      >
+        Checkout
+      </Button>
+    ) : (
+      <ButtonLink to="/login?next=/checkout" className={className}>
+        Log in to check out
+      </ButtonLink>
+    );
+
   return (
-    <Container className="max-w-5xl">
+    <Container className="max-w-5xl pb-28 md:pb-0">
       <PageHeader title="Your cart" />
-      <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <ul className="space-y-3">
           {cart.items.map((line) => (
             <li key={line.product.id}>
@@ -149,22 +165,19 @@ export function CartPage() {
               </p>
             )}
 
-            {user ? (
-              <Button
-                className="w-full"
-                disabled={!cart.meetsMinimum || unavailable}
-                onClick={() => void navigate('/checkout')}
-              >
-                Checkout
-              </Button>
-            ) : (
-              <ButtonLink to="/login?next=/checkout" className="w-full">
-                Log in to check out
-              </ButtonLink>
-            )}
+            {cta('hidden w-full md:inline-flex')}
           </Card>
         </aside>
       </div>
+      <StickyBar>
+        <div className="shrink-0">
+          <p className="text-xs text-zinc-400">Total</p>
+          <p className="text-lg leading-tight font-semibold tabular-nums">
+            {formatCents(cart.totalCents)}
+          </p>
+        </div>
+        {cta('flex-1')}
+      </StickyBar>
     </Container>
   );
 }

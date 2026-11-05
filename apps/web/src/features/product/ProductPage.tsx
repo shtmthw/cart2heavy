@@ -7,6 +7,7 @@ import { Button, ButtonLink } from '../../components/ui/button';
 import { EmptyState, ErrorState } from '../../components/ui/empty-state';
 import { Container } from '../../components/ui/page';
 import { QuantityStepper } from '../../components/ui/quantity-stepper';
+import { StickyBar } from '../../components/ui/sticky-bar';
 import { Skeleton } from '../../components/ui/skeleton';
 import { ApiError, errorMessage } from '../../lib/api';
 import { useCart } from '../../lib/cart';
@@ -32,7 +33,7 @@ export function ProductPage() {
 
   if (isPending) {
     return (
-      <Container className="grid gap-8 md:grid-cols-2">
+      <Container className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <Skeleton className="aspect-[3/2] w-full" />
         <div className="space-y-4">
           <Skeleton className="h-4 w-24" />
@@ -66,7 +67,7 @@ export function ProductPage() {
 
   const inCart = quantityOf(product.id);
   return (
-    <Container>
+    <Container className="pb-28 md:pb-0">
       <Link
         to={product.category ? `/?category=${product.category.slug}` : '/'}
         className="mb-4 inline-flex items-center gap-1 text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
@@ -75,7 +76,7 @@ export function ProductPage() {
         {product.category ? product.category.name : 'All products'}
       </Link>
 
-      <div className="grid gap-8 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div className="overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-800">
           <img
             src={product.imageUrl}
@@ -122,7 +123,7 @@ export function ProductPage() {
               max={Math.max(1, LIMITS.maxCartQuantity - inCart)}
             />
             <Button
-              className="min-w-40"
+              className="hidden min-w-40 md:inline-flex"
               loading={pendingId === product.id}
               disabled={inCart >= LIMITS.maxCartQuantity}
               onClick={() => void addToCart(product, quantity).then(() => setQuantity(1))}
@@ -142,7 +143,7 @@ export function ProductPage() {
         </div>
       </div>
 
-      <div className="mt-14 grid gap-6 lg:grid-cols-[1fr_22rem]">
+      <div className="mt-14 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="space-y-6">
           <Card className="p-6">
             <h2 className="mb-3 text-lg font-semibold">About this item</h2>
@@ -238,6 +239,23 @@ export function ProductPage() {
           </div>
         </section>
       )}
+      <StickyBar>
+        <div className="shrink-0">
+          <p className="text-xs text-zinc-400">Price</p>
+          <p className="text-lg leading-tight font-semibold tabular-nums">
+            {formatCents(product.priceCents * quantity)}
+          </p>
+        </div>
+        <Button
+          className="flex-1"
+          loading={pendingId === product.id}
+          disabled={inCart >= LIMITS.maxCartQuantity}
+          onClick={() => void addToCart(product, quantity).then(() => setQuantity(1))}
+        >
+          <ShoppingCart className="size-4" aria-hidden />
+          Add to cart
+        </Button>
+      </StickyBar>
     </Container>
   );
 }

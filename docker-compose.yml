@@ -15,7 +15,7 @@ services:
       - '${APP_BIND:-127.0.0.1}:${APP_PORT:-8080}:8080'
     environment:
       MONGODB_URI: mongodb://mongo:27017/cart2heavy
-      APP_URL: http://localhost:${APP_PORT:-8080}
+      APP_URL: ${APP_URL:-http://localhost:${APP_PORT:-8080}}
       JWT_SECRET: ${JWT_SECRET:-} # empty = the app creates a random secret and keeps it in the database
       PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}

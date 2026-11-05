@@ -603,3 +603,6 @@ image is ~312 MB unpacked (target was 250); the compose ports listen on 127.0.0.
   MSI blocks downloads and has no free photos.
 - 2026-11-05 — Follow-up 3: theme changed to the slate/lavender palette (#494D5F page, lighter slate cards, #D0BDF4 accent), Inter + Plus Jakarta Sans fonts
   (logo keeps its look), product page now has about / details / delivery / related products.
+- 2026-11-05 — Follow-up 4: mobile pass over all three areas (no side scroll, 16px inputs, 44px targets, sticky bottom actions, admin lists as cards, bottom
+  sheets, 2x2 dashboard stats), `e2e/tests/mobile.spec.ts` guards it (24 e2e tests), darker background (#1C1E27), README phone section, `APP_URL`
+  overridable in compose.

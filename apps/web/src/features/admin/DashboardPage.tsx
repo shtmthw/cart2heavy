@@ -21,7 +21,7 @@ function Stat({
   hint?: string;
 }) {
   const body = (
-    <Card className="p-4 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/60">
+    <Card className="p-3.5 transition-colors hover:bg-zinc-50 sm:p-4 dark:hover:bg-zinc-800/60">
       <p className="text-sm text-zinc-500">{label}</p>
       <p className="mt-1 text-2xl font-semibold tabular-nums">{value}</p>
       {hint && <p className="mt-1 text-xs text-zinc-500">{hint}</p>}
@@ -38,7 +38,7 @@ export function DashboardPage() {
     return (
       <Container>
         <PageHeader title="Dashboard" />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {Array.from({ length: 4 }, (_, i) => (
             <Skeleton key={i} className="h-24" />
           ))}
@@ -59,7 +59,7 @@ export function DashboardPage() {
   return (
     <Container>
       <PageHeader title="Dashboard" description="How the shop is doing." />
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Stat
           label="Revenue"
           value={formatCents(data.revenueCents)}
@@ -75,7 +75,7 @@ export function DashboardPage() {
         />
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card className="p-5">
           <h2 className="mb-4 font-semibold">Orders by status</h2>
           <ul className="space-y-3">

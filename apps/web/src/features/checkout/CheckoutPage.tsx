@@ -10,6 +10,7 @@ import { Card } from '../../components/ui/card';
 import { EmptyState } from '../../components/ui/empty-state';
 import { TextField } from '../../components/ui/field';
 import { Container, PageHeader } from '../../components/ui/page';
+import { StickyBar } from '../../components/ui/sticky-bar';
 import { Skeleton } from '../../components/ui/skeleton';
 import { api } from '../../lib/api';
 import { useAuth } from '../../lib/auth';
@@ -81,10 +82,11 @@ export function CheckoutPage() {
   }
 
   return (
-    <Container className="max-w-5xl">
+    <Container className="max-w-5xl pb-28 md:pb-0">
       <PageHeader title="Checkout" description="Where should we send it?" />
-      <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <form
+          id="checkout-form"
           noValidate
           onSubmit={(event) => {
             setFormError(null);
@@ -112,7 +114,7 @@ export function CheckoutPage() {
               error={errors.line2?.message}
               {...register('line2')}
             />
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <TextField
                 label="City"
                 autoComplete="address-level2"
@@ -126,7 +128,7 @@ export function CheckoutPage() {
                 {...register('postalCode')}
               />
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <TextField
                 label="Country"
                 autoComplete="country-name"
@@ -146,7 +148,11 @@ export function CheckoutPage() {
                 {formError}
               </p>
             )}
-            <Button type="submit" className="w-full sm:w-auto" loading={checkout.isPending}>
+            <Button
+              type="submit"
+              className="hidden w-full md:inline-flex md:w-auto"
+              loading={checkout.isPending}
+            >
               Continue to payment · {formatCents(cart.totalCents)}
             </Button>
           </Card>
@@ -178,6 +184,17 @@ export function CheckoutPage() {
           </Card>
         </aside>
       </div>
+      <StickyBar>
+        <div className="shrink-0">
+          <p className="text-xs text-zinc-400">Total</p>
+          <p className="text-lg leading-tight font-semibold tabular-nums">
+            {formatCents(cart.totalCents)}
+          </p>
+        </div>
+        <Button type="submit" form="checkout-form" className="flex-1" loading={checkout.isPending}>
+          Continue to payment
+        </Button>
+      </StickyBar>
     </Container>
   );
 }

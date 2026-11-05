@@ -90,7 +90,7 @@ export function OrderDetailPage() {
         </Card>
       )}
 
-      <div className="grid gap-6 md:grid-cols-[1fr_18rem]">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[minmax(0,1fr)_18rem]">
         <div className="space-y-6">
           <Card className="p-5">
             <h2 className="mb-4 font-semibold">Progress</h2>

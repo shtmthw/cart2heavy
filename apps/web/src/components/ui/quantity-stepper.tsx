@@ -20,7 +20,7 @@ export function QuantityStepper({
   className?: string;
 }) {
   const button =
-    'grid size-9 place-items-center text-zinc-700 hover:bg-zinc-100 disabled:opacity-40 disabled:hover:bg-transparent dark:text-zinc-300 dark:hover:bg-zinc-800';
+    'grid size-11 place-items-center sm:size-9 text-zinc-700 hover:bg-zinc-100 disabled:opacity-40 disabled:hover:bg-transparent dark:text-zinc-300 dark:hover:bg-zinc-800';
   return (
     <div
       role="group"
@@ -39,7 +39,10 @@ export function QuantityStepper({
       >
         <Minus className="size-4" aria-hidden />
       </button>
-      <output aria-live="polite" className="min-w-10 px-1 text-center text-sm tabular-nums">
+      <output
+        aria-live="polite"
+        className="min-w-10 px-1 text-center text-base tabular-nums sm:text-sm"
+      >
         {value}
       </output>
       <button

@@ -9,7 +9,7 @@ import {
 import { cn } from '../../lib/utils';
 
 const control =
-  'block w-full rounded-lg border bg-white px-3 text-sm text-zinc-900 placeholder:text-zinc-400 transition-shadow ' +
+  'block w-full rounded-lg border bg-white px-3 text-base text-zinc-900 sm:text-sm placeholder:text-zinc-400 transition-shadow ' +
   'border-zinc-200 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/15 ' +
   'disabled:opacity-60 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-700 dark:placeholder:text-zinc-500';
 
@@ -70,7 +70,7 @@ export function TextField({
           id={id}
           aria-describedby={describedBy}
           aria-invalid={invalid || undefined}
-          className={cn(control, 'h-10', invalid && 'border-red-500', className)}
+          className={cn(control, 'h-11 sm:h-10', invalid && 'border-red-500', className)}
           {...props}
         />
       )}
@@ -93,7 +93,7 @@ export function TextArea({
           id={id}
           aria-describedby={describedBy}
           aria-invalid={invalid || undefined}
-          className={cn(control, 'min-h-24 py-2', invalid && 'border-red-500', className)}
+          className={cn(control, 'min-h-28 py-2.5', invalid && 'border-red-500', className)}
           {...props}
         />
       )}
@@ -117,7 +117,7 @@ export function SelectField({
           id={id}
           aria-describedby={describedBy}
           aria-invalid={invalid || undefined}
-          className={cn(control, 'h-10', invalid && 'border-red-500', className)}
+          className={cn(control, 'h-11 sm:h-10', invalid && 'border-red-500', className)}
           {...props}
         >
           {children}
@@ -148,7 +148,7 @@ export function CompactSelect({
       <select
         aria-label={label}
         className={cn(
-          'h-10 cursor-pointer appearance-none rounded-full border border-zinc-200 bg-white pr-9 text-sm font-medium text-zinc-800 shadow-sm',
+          'h-11 cursor-pointer appearance-none rounded-full border border-zinc-200 bg-white pr-9 text-base font-medium sm:h-10 sm:text-sm text-zinc-800 shadow-sm',
           'transition-all hover:border-zinc-300 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/15',
           'dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:border-zinc-600',
           prefix ? 'pl-[3.4rem]' : 'pl-4',

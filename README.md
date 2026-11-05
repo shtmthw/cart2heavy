@@ -30,6 +30,13 @@ simulated payments, so nothing needs to be configured. (Needs [Docker](https://d
 | Admin     | `admin@cart2heavy.local`     | `admin1234`     |
 | Logistics | `logistics@cart2heavy.local` | `logistics1234` |
 
+The admin account can also open the logistics panel; the logistics account only gets its own panel, and
+customers get neither. Change the demo passwords (Account → Password) before anyone else can reach the site.
+
+**Open it on your phone.** By default the shop only listens on your own computer. To try it from a phone on the same
+Wi-Fi, start it with `APP_BIND=0.0.0.0` and set `APP_URL` to your computer's address, for example
+`APP_BIND=0.0.0.0 APP_URL=http://192.168.1.20:8080 docker compose up` (use the address your computer has on your network). `APP_URL` is the address you type into the phone; it is used for the payment page redirect and the links in emails.
+
 Stop with `Ctrl+C` (or `docker compose down`). Your data stays in Docker volumes; `docker compose down -v`
 deletes it and the next start begins with fresh demo data.
 
@@ -68,25 +75,50 @@ deletes it and the next start begins with fresh demo data.
 | -------------------------------------------------------- | ------------------------------------------------------ |
 | ![Admin dashboard](docs/screenshots/admin-dashboard.png) | ![Admin products](docs/screenshots/admin-products.png) |
 
-**Logistics** (`/logistics`)
+**Logistics** (`/logistics`, for logistics accounts and admins)
 
 - The queue of paid, confirmed orders with items, address and the **package size**, oldest first.
 - One click moves an order to its next step (only forward, every change is recorded with who did it).
 
 ![Logistics queue](docs/screenshots/logistics.png)
 
-It is responsive and works on phones.
+### On a phone
 
-|                                             |                                                  |
-| ------------------------------------------- | ------------------------------------------------ |
-| ![Mobile](docs/screenshots/mobile-home.png) | ![Mobile cart](docs/screenshots/mobile-cart.png) |
+All three areas are built for phones (tested at 390 px wide) and follow the same rules:
+
+- No sideways scrolling; filters and category chips scroll inside their own row.
+- The main action stays under your thumb: **Add to cart**, **Checkout** and **Continue to payment** sit in a bar at the
+  bottom of the screen.
+- Buttons and fields are finger-sized, and text fields are 16 px so iPhones do not zoom in when you tap them.
+- Admin lists (products, orders, categories) turn into cards that show price, status and actions without scrolling.
+  Orders and forms open as a sheet from the bottom of the screen.
+- Logistics shows one big button per order to move it to the next step.
+
+| Shop                                                 | Product                                                    | Cart                                                 |
+| ---------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
+| ![Home on a phone](docs/screenshots/mobile-home.png) | ![Product on a phone](docs/screenshots/mobile-product.png) | ![Cart on a phone](docs/screenshots/mobile-cart.png) |
+
+| Admin dashboard                                                            | Admin products                                                           | Admin order                                                        | Logistics                                                      |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------ | -------------------------------------------------------------- |
+| ![Admin dashboard on a phone](docs/screenshots/mobile-admin-dashboard.png) | ![Admin products on a phone](docs/screenshots/mobile-admin-products.png) | ![Admin order on a phone](docs/screenshots/mobile-admin-order.png) | ![Logistics on a phone](docs/screenshots/mobile-logistics.png) |
+
+---
+
+## Look and feel
+
+One dark theme: slate background (`#1C1E27`), lighter slate cards, a lavender accent (`#D0BDF4`), Inter for text and
+Plus Jakarta Sans for headings. Pages fade in, cards lift on hover and menus and sheets ease in (animations are turned
+off for people who ask their device to reduce motion). The colours live in one place, the `@theme` block of
+`apps/web/src/index.css`, so changing the accent or the background is a three-line edit.
 
 ---
 
 ## Configuration
 
-`docker compose up` works without any setup. To change something, copy `.env.example` to `.env` next to
-`docker-compose.yml`; Compose reads it automatically.
+`docker compose up` works without any setup. To change something, create a file called `.env` next to
+`docker-compose.yml` that contains **only the lines you want to change** (for example `PAYMENT_PROVIDER=stripe`);
+Compose reads it automatically. Do not copy `.env.example` for this: it is meant for `pnpm dev` and would, among other
+things, turn the demo data off and point the site at port 5173.
 
 | Variable                | Default                           | What it does                                                                                                |
 | ----------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------- |
@@ -213,8 +245,9 @@ docker-compose.yml  app + MongoDB + Mailpit
              unpaid → order stays unpaid · cart kept · "try again" button
   ```
 
-- **Roles are enforced on the server.** `customer`, `admin` and `logistics` accounts; the admin and
-  logistics endpoints return 403 to everyone else (the UI hiding things is only a convenience).
+- **Roles are enforced on the server.** `customer`, `admin` and `logistics` accounts. The admin endpoints
+  are for admins only; the logistics endpoints are for logistics accounts and admins. Everyone else gets 403
+  (the UI hiding things is only a convenience).
   Public sign-up can only create customers.
 - **Uploads** are checked by MIME type, extension _and_ file signature, limited to 5 MB and stored under
   random names.

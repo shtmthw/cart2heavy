@@ -1,10 +1,14 @@
 # cart2heavy
 
-A small full-stack shop with **three roles on one order pipeline**: customers buy, the admin confirms,
-logistics delivers. Written in TypeScript end to end (Express, MongoDB, React), and it runs with a
-single command.
+A full-stack shop with three roles working through one order pipeline: customers buy, admins confirm orders, and logistics handles delivery.
 
-![The cart2heavy storefront](docs/screenshots/home.png)
+Built with TypeScript, Express, MongoDB, and React. Get it running with a single command.
+
+![cart2heavy storefront](docs/screenshots/home.png)
+
+## Getting started
+
+**Requirements:** [Docker](https://docs.docker.com/get-docker/) with Docker Compose.
 
 ```bash
 git clone https://github.com/shtmthw/cart2heavy.git
@@ -12,283 +16,277 @@ cd cart2heavy
 docker compose up
 ```
 
-Open **<http://localhost:8080>**. That is all: the shop comes with demo products, demo accounts and
-simulated payments, so nothing needs to be configured. (Needs [Docker](https://docs.docker.com/get-docker/).)
+Open **http://localhost:8080**.
 
-| What                  | Where                                   |
-| --------------------- | --------------------------------------- |
-| Store                 | <http://localhost:8080>                 |
-| Admin panel           | <http://localhost:8080/admin>           |
-| Logistics panel       | <http://localhost:8080/logistics>       |
-| Emails the shop sends | <http://localhost:8025> (Mailpit inbox) |
+The default setup includes demo products, demo accounts, and simulated payments. No additional configuration is required.
 
-**Demo accounts** (created on the first start, local use only):
+### Application URLs
 
-| Role      | Email                        | Password        |
-| --------- | ---------------------------- | --------------- |
-| Customer  | `demo@cart2heavy.local`      | `demo1234`      |
-| Admin     | `admin@cart2heavy.local`     | `admin1234`     |
+| Area | URL |
+|---|---|
+| Store | http://localhost:8080 |
+| Admin panel | http://localhost:8080/admin |
+| Logistics panel | http://localhost:8080/logistics |
+| Email inbox | http://localhost:8025 |
+
+### Demo accounts
+
+These accounts are created automatically when the database is first initialized with demo data.
+
+| Role | Email | Password |
+|---|---|---|
+| Customer | `demo@cart2heavy.local` | `demo1234` |
+| Admin | `admin@cart2heavy.local` | `admin1234` |
 | Logistics | `logistics@cart2heavy.local` | `logistics1234` |
 
-The admin account can also open the logistics panel; the logistics account only gets its own panel, and
-customers get neither. Change the demo passwords (Account → Password) before anyone else can reach the site.
+The admin account can access both the admin and logistics panels. Logistics accounts can only access the logistics panel. Customers cannot access either.
 
-**Open it on your phone.** By default the shop only listens on your own computer. To try it from a phone on the same
-Wi-Fi, start it with `APP_BIND=0.0.0.0` and set `APP_URL` to your computer's address, for example
-`APP_BIND=0.0.0.0 APP_URL=http://192.168.1.20:8080 docker compose up` (use the address your computer has on your network). `APP_URL` is the address you type into the phone; it is used for the payment page redirect and the links in emails.
+**Change the demo passwords before allowing anyone else to access your installation.**
 
-Stop with `Ctrl+C` (or `docker compose down`). Your data stays in Docker volumes; `docker compose down -v`
-deletes it and the next start begins with fresh demo data.
+### Access from other devices
 
----
+By default, the application only listens on your computer.
 
-## What it does
+To access it from another device on the same network, such as a phone, set `APP_BIND` to `0.0.0.0` and `APP_URL` to your computer's local network address:
 
-**Customers**
+```bash
+APP_BIND=0.0.0.0 APP_URL=http://192.168.1.20:8080 docker compose up
+```
 
-- Browse, filter by category, sort (newest, most popular, price) and page through the products. The
-  three **most bought** products are shown on the home page.
-- **Instant search**: suggestions while typing, arrow keys and Enter, plus a results page.
-- A **cart** that works before logging in (it lives in the browser) and is merged into the account on
-  login. Totals, delivery fee and the **$25 minimum order** are calculated on the server.
-- **Checkout** with the address of the last order pre-filled, then pay. Orders get a **status
-  timeline** (processing → confirmed → received → shipping → shipped → out for delivery → delivered)
-  and emails for the important steps.
-- Account page: name, profile photo, password.
+Replace `192.168.1.20` with your computer's actual local IP address.
 
-![Product page](docs/screenshots/product.png)
+`APP_URL` is used for payment redirects and links included in emails.
 
-|                                                |                                                        |
-| ---------------------------------------------- | ------------------------------------------------------ |
-| ![Instant search](docs/screenshots/search.png) | ![Order timeline](docs/screenshots/order-timeline.png) |
-| ![Cart](docs/screenshots/cart.png)             | ![Checkout](docs/screenshots/checkout.png)             |
+### Stopping the application
 
-**Admin** (`/admin`)
+Press `Ctrl+C` or run:
 
-- Dashboard: revenue, orders per status, orders waiting for confirmation, most bought products.
-- Products: create, **edit** and delete with photo upload. A product that was ordered before is hidden
-  instead of deleted, so old orders keep their history.
-- Categories with a **package size** (S / M / B / L). A category that still has products cannot be deleted.
-- Orders: filter by status and payment, **confirm** paid orders, cancel.
+```bash
+docker compose down
+```
 
-|                                                          |                                                        |
-| -------------------------------------------------------- | ------------------------------------------------------ |
-| ![Admin dashboard](docs/screenshots/admin-dashboard.png) | ![Admin products](docs/screenshots/admin-products.png) |
+Your data is stored in Docker volumes and survives normal shutdowns.
 
-**Logistics** (`/logistics`, for logistics accounts and admins)
+To remove all application data and start fresh:
 
-- The queue of paid, confirmed orders with items, address and the **package size**, oldest first.
-- One click moves an order to its next step (only forward, every change is recorded with who did it).
+```bash
+docker compose down -v
+```
 
-![Logistics queue](docs/screenshots/logistics.png)
-
-### On a phone
-
-All three areas are built for phones (tested at 390 px wide) and follow the same rules:
-
-- No sideways scrolling; filters and category chips scroll inside their own row.
-- The main action stays under your thumb: **Add to cart**, **Checkout** and **Continue to payment** sit in a bar at the
-  bottom of the screen.
-- Buttons and fields are finger-sized, and text fields are 16 px so iPhones do not zoom in when you tap them.
-- Admin lists (products, orders, categories) turn into cards that show price, status and actions without scrolling.
-  Orders and forms open as a sheet from the bottom of the screen.
-- Logistics shows one big button per order to move it to the next step.
-
-| Shop                                                 | Product                                                    | Cart                                                 |
-| ---------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------- |
-| ![Home on a phone](docs/screenshots/mobile-home.png) | ![Product on a phone](docs/screenshots/mobile-product.png) | ![Cart on a phone](docs/screenshots/mobile-cart.png) |
-
-| Admin dashboard                                                            | Admin products                                                           | Admin order                                                        | Logistics                                                      |
-| -------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------ | -------------------------------------------------------------- |
-| ![Admin dashboard on a phone](docs/screenshots/mobile-admin-dashboard.png) | ![Admin products on a phone](docs/screenshots/mobile-admin-products.png) | ![Admin order on a phone](docs/screenshots/mobile-admin-order.png) | ![Logistics on a phone](docs/screenshots/mobile-logistics.png) |
+This permanently deletes the database and uploaded files.
 
 ---
 
-## Look and feel
+## Features
 
-One dark theme: slate background (`#1C1E27`), lighter slate cards, a lavender accent (`#D0BDF4`), Inter for text and
-Plus Jakarta Sans for headings. Pages fade in, cards lift on hover and menus and sheets ease in (animations are turned
-off for people who ask their device to reduce motion). The colours live in one place, the `@theme` block of
-`apps/web/src/index.css`, so changing the accent or the background is a three-line edit.
+### Customer storefront
+
+- Browse products, filter by category, sort by newest, popularity, or price, and navigate through paginated results.
+- Homepage highlights the three most purchased products.
+- Instant search with suggestions, keyboard navigation, and a dedicated results page.
+- Shopping cart that works without an account and merges into the customer's account after login.
+- Server-side pricing, delivery fee calculation, and a $25 minimum order.
+- Checkout with the previous delivery address automatically filled in.
+- Order tracking with a status timeline and email notifications.
+- Account management for name, profile photo, and password.
+
+### Admin panel
+
+Available at `/admin`.
+
+- Dashboard with revenue, order statistics, pending confirmations, and popular products.
+- Create, edit, and delete products, including photo uploads.
+- Previously ordered products are hidden instead of permanently deleted, preserving order history.
+- Manage categories and their package sizes (S / M / B / L).
+- Filter orders by status and payment.
+- Confirm paid orders or cancel orders.
+
+### Logistics panel
+
+Available at `/logistics`.
+
+- View paid and confirmed orders in chronological order.
+- See order items, delivery addresses, and package sizes.
+- Advance orders through their delivery stages with a single action.
+- Every status change is recorded along with the person who made it.
+
+### Order lifecycle
+
+Orders move through the following stages:
+
+`Processing → Confirmed → Received → Shipping → Shipped → Out for delivery → Delivered`
+
+The customer can track these updates through their account.
+
+### Mobile support
+
+The storefront, admin panel, and logistics panel are designed to work on mobile devices.
+
+- Responsive layouts without horizontal page scrolling.
+- Touch-friendly controls and forms.
+- Bottom action bars for important checkout and shopping actions.
+- Admin tables adapt into mobile-friendly cards.
+- Logistics provides a large, accessible action for advancing each order.
 
 ---
 
 ## Configuration
 
-`docker compose up` works without any setup. To change something, create a file called `.env` next to
-`docker-compose.yml` that contains **only the lines you want to change** (for example `PAYMENT_PROVIDER=stripe`);
-Compose reads it automatically. Do not copy `.env.example` for this: it is meant for `pnpm dev` and would, among other
-things, turn the demo data off and point the site at port 5173.
+The default Docker setup works without an `.env` file.
 
-| Variable                | Default                           | What it does                                                                                                |
-| ----------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `APP_PORT`              | `8080`                            | Port of the shop on your computer.                                                                          |
-| `APP_BIND`              | `127.0.0.1`                       | Which address the shop and the Mailpit inbox listen on. `0.0.0.0` opens them to your network.               |
-| `PAYMENT_PROVIDER`      | `mock` (`stripe` if a key is set) | `mock` = simulated payments, `stripe` = real Stripe Checkout.                                               |
-| `STRIPE_SECRET_KEY`     | –                                 | Your Stripe key (`sk_test_…`). Setting it switches the shop to Stripe.                                      |
-| `STRIPE_WEBHOOK_SECRET` | –                                 | Signing secret of the Stripe webhook (`whsec_…`), see below.                                                |
-| `JWT_SECRET`            | generated                         | Secret that signs login sessions. Left empty, the server creates a random one and keeps it in the database. |
-| `DELIVERY_FEE_CENTS`    | `180`                             | Delivery fee ($1.80), added once per order.                                                                 |
-| `MIN_ORDER_CENTS`       | `2500`                            | Minimum value of the items in an order ($25.00).                                                            |
-| `SEED_ON_START`         | `true` in Compose                 | Fill an **empty** database with demo data and the demo accounts.                                            |
-| `MAILPIT_PORT`          | `8025`                            | Port of the email inbox.                                                                                    |
+To customize it, create a file named `.env` next to `docker-compose.yml` and add only the variables you want to override.
 
-The server itself (running without Docker) understands a few more, all listed with comments in
-[`.env.example`](.env.example): `MONGODB_URI`, `APP_URL`, `UPLOAD_DIR`, `SMTP_HOST` / `SMTP_PORT` /
-`MAIL_FROM`, `TRUST_PROXY`, `LOG_LEVEL`. Invalid values stop the server at start-up with a message that
-names every problem.
+For example:
 
-### Real payments with Stripe
+```env
+PAYMENT_PROVIDER=stripe
+STRIPE_SECRET_KEY=sk_test_your_key
+```
 
-1. Put your **test** key in `.env`: `STRIPE_SECRET_KEY=sk_test_...`
-2. `docker compose up -d`. Checkout now sends customers to Stripe's payment page.
-3. _(Recommended)_ Let Stripe tell the shop about payments even when the customer closes the tab:
-   ```bash
-   stripe listen --forward-to localhost:8080/api/payments/stripe/webhook
+Docker Compose reads this file automatically.
+
+Do not copy `.env.example` for the Docker setup. That file is intended for running the application outside Docker and contains development-oriented defaults.
+
+### Environment variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `APP_PORT` | `8080` | Port exposed by the application. |
+| `APP_BIND` | `127.0.0.1` | Network address the application and Mailpit listen on. Use `0.0.0.0` to allow network access. |
+| `PAYMENT_PROVIDER` | `mock` | Payment provider: `mock` for simulated payments or `stripe` for real Stripe Checkout. |
+| `STRIPE_SECRET_KEY` | — | Stripe secret key (`sk_test_...` or a live key). |
+| `STRIPE_WEBHOOK_SECRET` | — | Stripe webhook signing secret (`whsec_...`). |
+| `JWT_SECRET` | Generated | Secret used to sign authentication sessions. If omitted, the server generates one and stores it in the database. |
+| `DELIVERY_FEE_CENTS` | `180` | Delivery fee in cents. Default: $1.80. |
+| `MIN_ORDER_CENTS` | `2500` | Minimum order value in cents. Default: $25.00. |
+| `SEED_ON_START` | `true` | Populate an empty database with demo data and accounts. |
+| `MAILPIT_PORT` | `8025` | Port for the local email inbox. |
+
+Other server configuration options are documented in `.env.example`, including database connection, application URL, file uploads, SMTP, proxy, and logging settings.
+
+Invalid configuration values cause the server to stop at startup and report the problems.
+
+---
+
+## Payments
+
+### Simulated payments
+
+The default payment provider is `mock`.
+
+It allows you to test the complete order workflow without a Stripe account or real transactions.
+
+### Stripe Checkout
+
+To enable real Stripe payments:
+
+1. Create a Stripe account at [stripe.com](https://stripe.com/).
+2. Add your Stripe test secret key to `.env`:
+
+   ```env
+   PAYMENT_PROVIDER=stripe
+   STRIPE_SECRET_KEY=sk_test_your_key
    ```
-   Put the printed `whsec_…` into `STRIPE_WEBHOOK_SECRET` and restart. For a live site, add
-   `https://your-domain/api/payments/stripe/webhook` as an endpoint in the Stripe dashboard
-   (event `checkout.session.completed`).
 
-Prices always go to Stripe in cents and are read from the database – never from the browser.
+3. Start or restart the application:
 
-### Using it for real
+   ```bash
+   docker compose up -d
+   ```
 
-The demo setup is meant for your own computer. Before putting it on a server:
+4. Configure Stripe webhooks so the application can receive payment notifications even when customers close the checkout page.
 
-- Put it behind HTTPS (for example a reverse proxy), set `APP_URL=https://your-domain` and `TRUST_PROXY=true`.
-- Start with **`SEED_ON_START=false`**, so no demo accounts exist, and create your own staff accounts:
-  ```bash
-  docker compose exec app node dist/create-user.js --role admin --email you@example.com --name "Your Name"
-  # roles: admin, logistics, customer. Without --password a random one is printed once.
-  ```
-- Point `SMTP_HOST` at a real mail server instead of Mailpit and set `STRIPE_SECRET_KEY` to take real payments.
-- Back up the `mongo-data` and `uploads` volumes.
+For local testing, install the [Stripe CLI](https://docs.stripe.com/stripe-cli) and run:
+
+```bash
+stripe listen --forward-to localhost:8080/api/payments/stripe/webhook
+```
+
+Copy the generated `whsec_...` value into `.env`:
+
+```env
+STRIPE_WEBHOOK_SECRET=whsec_your_secret
+```
+
+Restart the application after changing the configuration.
+
+For a live deployment, register this endpoint in your Stripe dashboard:
+
+```text
+https://your-domain/api/payments/stripe/webhook
+```
+
+Subscribe to:
+
+```text
+checkout.session.completed
+```
+
+Payment amounts are calculated from the server-side database, not supplied by the browser.
 
 ---
 
-## Development
+## Production deployment
 
-Needs Node.js 24+, [pnpm](https://pnpm.io/installation) and Docker (for MongoDB).
+The default configuration is intended for local demonstrations and testing. Before exposing the application publicly:
+
+1. Put the application behind HTTPS, using a reverse proxy.
+2. Set `APP_URL` to your public HTTPS address.
+3. Set `TRUST_PROXY=true` when operating behind a trusted reverse proxy.
+4. Set `SEED_ON_START=false` to prevent demo accounts and data from being created.
+5. Create your own administrator and staff accounts.
+6. Configure a real SMTP server instead of relying on Mailpit.
+7. Configure Stripe with your live payment credentials.
+8. Back up the `mongo-data` and `uploads` Docker volumes regularly.
+
+### Creating accounts
+
+The application includes a command for creating accounts from inside the running container.
+
+For example, to create an administrator:
 
 ```bash
-pnpm install
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d mongo mailpit   # MongoDB + email inbox
-cp .env.example .env
-pnpm seed        # demo data (use `pnpm seed --reset` to wipe and start over)
-pnpm dev         # API on :8080, web app with hot reload on http://localhost:5173
+docker compose exec app node dist/create-user.js \
+  --role admin \
+  --email you@example.com \
+  --name "Your Name"
 ```
 
-| Command                                            | What it does                                                                       |
-| -------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `pnpm dev`                                         | API (`tsx watch`) and web app (Vite) together; Vite proxies `/api` and `/uploads`. |
-| `pnpm build`                                       | Type-checks and builds the web app, then bundles the API into `apps/api/dist`.     |
-| `pnpm typecheck`                                   | Strict TypeScript across all packages and the e2e tests.                           |
-| `pnpm lint` / `pnpm format`                        | ESLint (typescript-eslint, React hooks) / Prettier.                                |
-| `pnpm test`                                        | Unit and API tests (Vitest + Supertest on an in-memory MongoDB).                   |
-| `pnpm e2e`                                         | End-to-end tests in a real browser against the Docker stack, see below.            |
-| `pnpm screenshots`                                 | Regenerates the pictures in `docs/screenshots/`.                                   |
-| `pnpm seed`                                        | Fills an empty database with demo data.                                            |
-| `pnpm create-user --role admin --email … --name …` | Creates an account of any role.                                                    |
+Supported roles:
 
-**Tests.** `pnpm test` covers the pricing rules, the cart, checkout and payment verification (mock
-and Stripe, including the webhook), the order status rules, uploads and role permissions.
-`pnpm e2e` builds the Docker image, starts a private copy of the shop (port 8081) with `docker compose`,
-runs the Playwright tests (sign-up → pay → admin confirm → logistics delivers → customer sees
-"Delivered", plus the emails in Mailpit) and removes it again. Install the browser once with
-`pnpm exec playwright install chromium`. To test a stack that is already running:
-`E2E_BASE_URL=http://localhost:8080 pnpm e2e`.
+- `admin`
+- `logistics`
+- `customer`
 
-### Project structure
+Without `--password`, the application generates a random password and prints it once.
 
-```
-apps/
-  api/            Express 5 + Mongoose + Zod
-    src/config      environment validation, dotenv, session secret
-    src/models      User, Category, Product, Order (money is stored as integer cents)
-    src/modules     auth, users, products, categories, cart, orders, payments, admin, logistics
-    src/middleware  auth + roles, same-origin check, uploads, error handler
-    src/payments    PaymentGateway interface: mock.ts and stripe.ts
-    src/mail        nodemailer + email templates
-    src/seed        demo data (+ compressed product photos), create-user
-    test/           Vitest + Supertest
-  web/            React 19 + Vite + React Router + TanStack Query + Tailwind CSS 4
-    src/app         router, layouts, route guards
-    src/features    catalog, product, search, cart, checkout, orders, account, auth, admin, logistics
-    src/components  small UI primitives (button, field, dialog, table, …)
-    src/lib         API client, auth and cart hooks
-packages/
-  shared/         Zod schemas, DTO types, order-status rules, money helpers, cart pricing
-e2e/              Playwright tests and the screenshot script
-Dockerfile        one image: the API that also serves the built web app
-docker-compose.yml  app + MongoDB + Mailpit
-```
-
-### How it fits together
-
-- **One image, one port.** The API serves the built React app, so there is no CORS and no hard-coded
-  URL. The login lives in an `httpOnly`, `SameSite=Lax` cookie; state-changing requests must also come
-  from the same origin.
-- **The server decides about money.** The browser only says _which_ products and _how many_. Prices,
-  delivery, the minimum order and totals are computed from the database (`packages/shared/src/pricing.ts`),
-  in integer cents.
-- **Checkout is safe to repeat.** An order is created _before_ payment, the cart is kept, and the
-  order is marked paid only after the payment provider confirms it (when the customer returns, or via
-  the Stripe webhook). Marking paid happens exactly once, so refreshes and webhook retries cannot
-  double-count the "most bought" numbers or send two emails.
-
-  ```
-  cart ─► POST /api/orders/checkout ─► payment page (Stripe, or the built-in test page)
-                                         │
-          POST /api/orders/:id/verify ◄──┘  asks the provider "was it paid?"
-             paid   → order paid · cart emptied · sales counted · "order received" email
-             unpaid → order stays unpaid · cart kept · "try again" button
-  ```
-
-- **Roles are enforced on the server.** `customer`, `admin` and `logistics` accounts. The admin endpoints
-  are for admins only; the logistics endpoints are for logistics accounts and admins. Everyone else gets 403
-  (the UI hiding things is only a convenience).
-  Public sign-up can only create customers.
-- **Uploads** are checked by MIME type, extension _and_ file signature, limited to 5 MB and stored under
-  random names.
+Public registration is restricted to customer accounts.
 
 ---
-
-## Publishing the image
-
-Maintainers publish a multi-architecture image (Intel/AMD and Apple Silicon) to Docker Hub. No CPU
-emulation is needed because only the build stages run, on the build machine's own architecture:
-
-```bash
-docker buildx build --platform linux/amd64,linux/arm64 \
-  -t matthew552/cart2heavy:1.0.0 -t matthew552/cart2heavy:latest --push .
-```
-
-`docker compose up` uses `matthew552/cart2heavy:latest` (pulled from Docker Hub, or built from the
-checkout when it is not there); `docker compose up --build` always builds the image from the checkout.
 
 ## Photo credits
 
-The demo product photos come from [Wikimedia Commons](https://commons.wikimedia.org/) and keep their
-original licenses. Exact photos of some products are not available under a free license, so a few show
-a close relative of the product (for example the ASUS boards are older ROG Strix models). Replace any of
-them in the admin panel (Products → Edit).
+The demo product photos come from [Wikimedia Commons](https://commons.wikimedia.org/) and retain their original licenses.
 
-| Product photo         | Source                                                                                                                                                                    | Author             | License       |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------- |
-| ASUS ROG Strix B450-F | [Asus ROG Strix B450-F with AMD Ryzen 3.jpg](https://commons.wikimedia.org/wiki/File:Asus_ROG_Strix_B450-F_with_AMD_Ryzen_3.jpg)                                          | Oligopolism        | CC0           |
-| ASUS ROG Strix Z690-A | [2023 Płyta główna Asus ROG STRIX Z690-A GAMING WIFI.jpg](https://commons.wikimedia.org/wiki/File:2023_P%C5%82yta_g%C5%82%C3%B3wna_Asus_ROG_STRIX_Z690-A_GAMING_WIFI.jpg) | Jacek Halicki      | CC BY-SA 4.0  |
-| ASUS ROG Strix Z390-F | [Asus-ROG-Strix-Z390-F-Gaming-Motherboard 20201120 DSC6025.jpg](https://commons.wikimedia.org/wiki/File:Asus-ROG-Strix-Z390-F-Gaming-Motherboard_20201120_DSC6025.jpg)    | PantheraLeo1359531 | CC BY 4.0     |
-| ASUS ROG Strix Z390-H | [Asus ROG Strix Z390-H motherboard.JPG](https://commons.wikimedia.org/wiki/File:Asus_ROG_Strix_Z390-H_motherboard.JPG)                                                    | MKFI               | Public domain |
-| ASUS ROG Strix Z490-I | [ASUS ROG STRIX Z490-I GAMING.png](https://commons.wikimedia.org/wiki/File:ASUS_ROG_STRIX_Z490-I_GAMING.png)                                                              | ASUS               | CC BY-SA 4.0  |
-| iPhone 15             | [Back of iPhone 15.jpg](https://commons.wikimedia.org/wiki/File:Back_of_iPhone_15.jpg)                                                                                    | ThePhotoGraphIc    | CC BY-SA 4.0  |
-| iPhone 15 Pro         | [Apple iPhone 15 Pro.jpg](https://commons.wikimedia.org/wiki/File:Apple_iPhone_15_Pro.jpg)                                                                                | IPHONE 15          | CC BY-SA 4.0  |
-| MacBook Air           | [MacBook Air (A2681) front.jpg](<https://commons.wikimedia.org/wiki/File:MacBook_Air_(A2681)_front.jpg>)                                                                  | メイド理世         | CC BY-SA 4.0  |
-| MacBook Pro 14"       | [M3 Macbook Pro 14 inch Space Grey model.jpg](https://commons.wikimedia.org/wiki/File:M3_Macbook_Pro_14_inch_Space_Grey_model.jpg)                                        | Kyu3a              | CC BY-SA 4.0  |
-| iMac 24"              | [IMac M4 2024.jpg](https://commons.wikimedia.org/wiki/File:IMac_M4_2024.jpg)                                                                                              | Seasider53         | CC BY 4.0     |
-| Mac mini              | [Mac mini (M4, 2024) - Backside.jpg](<https://commons.wikimedia.org/wiki/File:Mac_mini_(M4,_2024)_-_Backside.jpg>)                                                        | AzureSaturn        | CC0           |
-| Mac Studio            | [Mac Studio (2022) front.jpg](<https://commons.wikimedia.org/wiki/File:Mac_Studio_(2022)_front.jpg>)                                                                      | Yasu (talk)        | CC BY-SA 3.0  |
+Some exact product photos are not available under a suitable free license. In those cases, a similar product is used instead. For example, some ASUS motherboard images depict older ROG Strix models.
+
+Product images can be replaced from the admin panel under **Products → Edit**.
+
+| Product | Source | Author | License |
+|---|---|---|---|
+| ASUS ROG Strix B450-F | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Asus_ROG_Strix_B450-F_with_AMD_Ryzen_3.jpg) | Oligopolism | CC0 |
+| ASUS ROG Strix Z690-A | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:2023_P%C5%82yta_g%C5%82%C3%B3wna_Asus_ROG_STRIX_Z690-A_GAMING_WIFI.jpg) | Jacek Halicki | CC BY-SA 4.0 |
+| ASUS ROG Strix Z390-F | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Asus-ROG-Strix-Z390-F-Gaming-Motherboard_20201120_DSC6025.jpg) | PantheraLeo1359531 | CC BY 4.0 |
+| ASUS ROG Strix Z390-H | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Asus_ROG_Strix_Z390-H_motherboard.JPG) | MKFI | Public domain |
+| ASUS ROG Strix Z490-I | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:ASUS_ROG_STRIX_Z490-I_GAMING.png) | ASUS | CC BY-SA 4.0 |
+| iPhone 15 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Back_of_iPhone_15.jpg) | ThePhotoGraphIc | CC BY-SA 4.0 |
+| iPhone 15 Pro | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Apple_iPhone_15_Pro.jpg) | IPHONE 15 | CC BY-SA 4.0 |
+| MacBook Air | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:MacBook_Air_(A2681)_front.jpg) | メイド理世 | CC BY-SA 4.0 |
+| MacBook Pro 14" | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:M3_Macbook_Pro_14_inch_Space_Grey_model.jpg) | Kyu3a | CC BY-SA 4.0 |
+| iMac 24" | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:IMac_M4_2024.jpg) | Seasider53 | CC BY 4.0 |
+| Mac mini | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Mac_mini_(M4,_2024)_-_Backside.jpg) | AzureSaturn | CC0 |
+| Mac Studio | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Mac_Studio_(2022)_front.jpg) | Yasu (talk) | CC BY-SA 3.0 |
 
 ---
 
-Made and founded by [Matthew Baroi](https://github.com/shtmthw)
+Made and founded by [Matthew Baroi](https://github.com/shtmthw).

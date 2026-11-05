@@ -601,3 +601,5 @@ image is ~312 MB unpacked (target was 250); the compose ports listen on 127.0.0.
 - 2026-11-05 — Follow-up 2: whole site on one warm dark theme (#69281D), peach accent, page/menu/dialog/card animations, header full width with the logo
   left-aligned; seed photos replaced with CC-licensed Wikimedia Commons photos (credits in README); motherboards are ASUS ROG Strix boards because
   MSI blocks downloads and has no free photos.
+- 2026-11-05 — Follow-up 3: theme changed to the slate/lavender palette (#494D5F page, lighter slate cards, #D0BDF4 accent), Inter + Plus Jakarta Sans fonts
+  (logo keeps its look), product page now has about / details / delivery / related products.

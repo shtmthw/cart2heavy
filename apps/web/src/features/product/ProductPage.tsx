@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, BellRing, PackageCheck, ShieldCheck, ShoppingCart, Truck } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router';
-import { formatCents, LIMITS } from '@cart2heavy/shared';
+import { formatCents, LIMITS, WEIGHT_LABELS } from '@cart2heavy/shared';
 import { Button, ButtonLink } from '../../components/ui/button';
 import { EmptyState, ErrorState } from '../../components/ui/empty-state';
 import { Container } from '../../components/ui/page';
@@ -11,13 +11,21 @@ import { Skeleton } from '../../components/ui/skeleton';
 import { ApiError, errorMessage } from '../../lib/api';
 import { useCart } from '../../lib/cart';
 import { useDocumentTitle } from '../../lib/hooks';
-import { productQuery } from '../../lib/queries';
+import { configQuery, productQuery, productsQuery } from '../../lib/queries';
+import { Card } from '../../components/ui/card';
+import { ProductCard } from '../catalog/ProductCard';
 import { useAddToCart } from '../cart/useAddToCart';
 
 export function ProductPage() {
   const { id = '' } = useParams();
   const { data: product, isPending, error, refetch } = useQuery(productQuery(id));
   const [quantity, setQuantity] = useState(1);
+  const { data: config } = useQuery(configQuery);
+  const categorySlug = product?.category?.slug;
+  const related = useQuery({
+    ...productsQuery({ category: categorySlug, limit: 5, sort: 'popular' }),
+    enabled: !!categorySlug,
+  });
   const { addToCart, pendingId } = useAddToCart();
   const { quantityOf } = useCart();
   useDocumentTitle(product?.name);
@@ -88,9 +96,24 @@ export function ProductPage() {
               : 'Be the first to buy this'}
           </p>
 
-          <p className="mt-5 leading-relaxed whitespace-pre-line text-zinc-700 dark:text-zinc-300">
-            {product.description}
-          </p>
+          <ul className="mt-5 flex flex-wrap gap-2 text-sm">
+            {product.category && (
+              <li className="rounded-full border border-zinc-800 px-3 py-1 text-zinc-300">
+                {product.category.name}
+              </li>
+            )}
+            {product.category && (
+              <li className="rounded-full border border-zinc-800 px-3 py-1 text-zinc-300">
+                Package {WEIGHT_LABELS[product.category.weight].code} ·{' '}
+                {WEIGHT_LABELS[product.category.weight].label}
+              </li>
+            )}
+            {config && (
+              <li className="rounded-full border border-zinc-800 px-3 py-1 text-zinc-300">
+                {formatCents(config.deliveryCents)} delivery
+              </li>
+            )}
+          </ul>
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <QuantityStepper
@@ -118,6 +141,103 @@ export function ProductPage() {
           )}
         </div>
       </div>
+
+      <div className="mt-14 grid gap-6 lg:grid-cols-[1fr_22rem]">
+        <div className="space-y-6">
+          <Card className="p-6">
+            <h2 className="mb-3 text-lg font-semibold">About this item</h2>
+            <p className="leading-relaxed whitespace-pre-line text-zinc-300">
+              {product.description}
+            </p>
+          </Card>
+
+          <Card className="p-6">
+            <h2 className="mb-4 text-lg font-semibold">Details</h2>
+            <dl className="divide-y divide-zinc-800 text-sm">
+              {[
+                ['Product', product.name],
+                ['Category', product.category?.name ?? '—'],
+                [
+                  'Package size',
+                  product.category
+                    ? `${WEIGHT_LABELS[product.category.weight].code} · ${WEIGHT_LABELS[product.category.weight].label}`
+                    : '—',
+                ],
+                ['Price', formatCents(product.priceCents)],
+                ['Sold so far', String(product.totalBought)],
+                ['Item number', product.id.slice(-8).toUpperCase()],
+              ].map(([label, value]) => (
+                <div key={label} className="flex justify-between gap-4 py-2.5">
+                  <dt className="text-zinc-400">{label}</dt>
+                  <dd className="text-right font-medium">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </Card>
+        </div>
+
+        <aside className="space-y-6" aria-label="Delivery and service">
+          <Card className="p-6">
+            <h2 className="mb-4 text-lg font-semibold">Delivery</h2>
+            <ul className="space-y-4 text-sm">
+              <li className="flex gap-3">
+                <Truck className="mt-0.5 size-5 shrink-0 text-accent" aria-hidden />
+                <span>
+                  <span className="block font-medium">
+                    {config ? formatCents(config.deliveryCents) : '…'} flat delivery
+                  </span>
+                  <span className="text-zinc-400">
+                    One fee per order, however many items you add.
+                  </span>
+                </span>
+              </li>
+              <li className="flex gap-3">
+                <PackageCheck className="mt-0.5 size-5 shrink-0 text-accent" aria-hidden />
+                <span>
+                  <span className="block font-medium">
+                    Minimum order {config ? formatCents(config.minOrderCents) : '…'}
+                  </span>
+                  <span className="text-zinc-400">Counted on the items, before delivery.</span>
+                </span>
+              </li>
+              <li className="flex gap-3">
+                <BellRing className="mt-0.5 size-5 shrink-0 text-accent" aria-hidden />
+                <span>
+                  <span className="block font-medium">Track every step</span>
+                  <span className="text-zinc-400">
+                    Confirmed, shipped, out for delivery – with an email at the key moments.
+                  </span>
+                </span>
+              </li>
+              <li className="flex gap-3">
+                <ShieldCheck className="mt-0.5 size-5 shrink-0 text-accent" aria-hidden />
+                <span>
+                  <span className="block font-medium">Secure checkout</span>
+                  <span className="text-zinc-400">
+                    Prices are checked on our server, never in your browser.
+                  </span>
+                </span>
+              </li>
+            </ul>
+          </Card>
+        </aside>
+      </div>
+
+      {related.data && related.data.items.filter((p) => p.id !== product.id).length > 0 && (
+        <section className="mt-14" aria-labelledby="related">
+          <h2 id="related" className="mb-4 text-lg font-semibold">
+            More in {product.category?.name}
+          </h2>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+            {related.data.items
+              .filter((p) => p.id !== product.id)
+              .slice(0, 4)
+              .map((p, index) => (
+                <ProductCard key={p.id} product={p} index={index} />
+              ))}
+          </div>
+        </section>
+      )}
     </Container>
   );
 }

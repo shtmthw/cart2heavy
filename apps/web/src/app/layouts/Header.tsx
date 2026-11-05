@@ -11,7 +11,7 @@ export function Header() {
       <div className="flex flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3 sm:px-8 sm:py-4">
         <Link
           to="/"
-          className="text-3xl font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-[2.1rem]"
+          className="font-logo text-3xl font-bold tracking-tight transition-opacity hover:opacity-80 sm:text-[2.1rem]"
         >
           cart<span className="text-accent">2</span>heavy
         </Link>

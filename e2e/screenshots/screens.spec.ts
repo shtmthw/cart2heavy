@@ -32,6 +32,7 @@ async function settle(page: Page) {
   await page.evaluate(() => document.fonts.ready);
   // product photos are lazy: wait until every visible one has loaded
   await page.waitForFunction(() => [...document.images].every((img) => img.complete));
+  await page.waitForTimeout(800); // let the entrance animations finish
 }
 
 test.describe.configure({ mode: 'serial' });
@@ -50,7 +51,7 @@ test('storefront', async ({ page, context }) => {
     .click();
   await expect(page.getByRole('button', { name: 'Add to cart' })).toBeVisible();
   await settle(page);
-  await page.screenshot({ path: shot('product') });
+  await page.screenshot({ path: shot('product'), fullPage: true });
 
   // instant search
   await page.goto('/');

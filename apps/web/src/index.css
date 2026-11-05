@@ -1,29 +1,36 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/plus-jakarta-sans';
 @import 'tailwindcss';
 
-/* The whole site is one warm, dark theme on the brand colour #69281D. */
+/* The whole site is one dark theme: slate #494D5F for the page, a lighter slate for cards, lavender accent. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   /* one accent colour: change it here and the whole app follows */
-  --color-accent: #f2b88f;
-  --color-accent-hover: #f7cba9;
-  --color-accent-soft: rgb(242 184 143 / 0.18);
-  --color-ink: #3d1710; /* text on top of the accent colour */
+  --color-accent: #d0bdf4;
+  --color-accent-hover: #e1d5f9;
+  --color-accent-soft: rgb(208 189 244 / 0.16);
+  --color-ink: #2a2c3b; /* text on top of the accent colour */
 
-  /* "zinc" is remapped to a brown scale: 950 = page (#69281D), 900 = cards, 800 = lines, 100-500 = text */
-  --color-zinc-50: #fdf6f2;
-  --color-zinc-100: #f8ebe5;
-  --color-zinc-200: #efd5ca;
-  --color-zinc-300: #e0b9ab;
-  --color-zinc-400: #d3a898;
-  --color-zinc-500: #c29686;
-  --color-zinc-600: #a97363;
-  --color-zinc-700: #9a5a49;
-  --color-zinc-800: #8a4a3b;
-  --color-zinc-900: #7a3427;
-  --color-zinc-950: #69281d;
+  /* "zinc" is remapped to the palette: 950 = page, 900 = cards, 800 = lines, 100-500 = text */
+  --color-zinc-50: #f3f5fb;
+  --color-zinc-100: #e5eaf5;
+  --color-zinc-200: #d9dfee;
+  --color-zinc-300: #c6cde1;
+  --color-zinc-400: #b6bed6;
+  --color-zinc-500: #a3abc4;
+  --color-zinc-600: #8a92ac;
+  --color-zinc-700: #747a93;
+  --color-zinc-800: #666c84;
+  --color-zinc-900: #575c72;
+  --color-zinc-950: #494d5f;
 
   --font-sans:
+    'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display:
+    'Plus Jakarta Sans Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  /* the logo keeps its original look */
+  --font-logo:
     ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   --animate-fade-up: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
@@ -68,6 +75,12 @@
   body {
     @apply bg-zinc-950 text-zinc-100 antialiased;
     -webkit-tap-highlight-color: transparent;
+  }
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    word-spacing: 0.08em;
   }
   ::selection {
     background: var(--color-accent-soft);

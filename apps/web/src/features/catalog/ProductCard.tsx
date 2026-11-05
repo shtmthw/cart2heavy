@@ -40,7 +40,7 @@ export function ProductCard({ product, index = 0 }: { product: ProductDTO; index
           aria-label={`Add ${product.name} to cart`}
         >
           <Plus className="size-4" aria-hidden />
-          Add
+          <span className="hidden sm:inline">Add</span>
         </Button>
       </div>
     </Card>

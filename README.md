@@ -90,6 +90,14 @@ This permanently deletes the database and uploaded files.
 - Order tracking with a status timeline and email notifications.
 - Account management for name, profile photo, and password.
 
+![Product page](docs/screenshots/product.png)
+
+**Search and order tracking**
+
+| Instant search | Order timeline |
+|---|---|
+| ![Instant search](docs/screenshots/search.png) | ![Order timeline](docs/screenshots/order-timeline.png) |
+
 ### Admin panel
 
 Available at `/admin`.
@@ -101,6 +109,8 @@ Available at `/admin`.
 - Filter orders by status and payment.
 - Confirm paid orders or cancel orders.
 
+![Admin dashboard](docs/screenshots/admin-dashboard.png)
+
 ### Logistics panel
 
 Available at `/logistics`.
@@ -110,13 +120,7 @@ Available at `/logistics`.
 - Advance orders through their delivery stages with a single action.
 - Every status change is recorded along with the person who made it.
 
-### Order lifecycle
-
-Orders move through the following stages:
-
-`Processing → Confirmed → Received → Shipping → Shipped → Out for delivery → Delivered`
-
-The customer can track these updates through their account.
+![Logistics queue](docs/screenshots/logistics.png)
 
 ### Mobile support
 

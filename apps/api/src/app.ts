@@ -100,7 +100,7 @@ export function createApp(config: AppConfig, options: CreateAppOptions = {}): Ex
   api.post('/payments/stripe/webhook', ...stripeWebhook(ctx));
   api.use(express.json({ limit: '100kb' }));
   api.use(cookieParser());
-  api.use(sameOrigin);
+  api.use(sameOrigin(config));
   api.use(authenticate(config));
 
   const authLimiter =

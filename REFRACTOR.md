@@ -427,13 +427,13 @@ Each phase ends with something that runs. Commits are made per phase on a branch
       status steps all pass.
 
 ### Phase 5 — Web: base & storefront
-- [ ] Vite + React + TS + Tailwind v4, router with layouts (store / admin / logistics), TanStack
+- [x] Vite + React + TS + Tailwind v4, router with layouts (store / admin / logistics), TanStack
       Query, typed API client (`fetch`, cookies), auth context (`/auth/me`), route guards.
-- [ ] UI primitives (button, input, select, card, badge, dialog, table, skeleton, toast).
-- [ ] Header (search dropdown, cart badge, account menu), footer.
-- [ ] Home, product page, search page, category filter, pagination, sort.
-- [ ] Cart (guest + logged in, merge on login), checkout, mock payment page, payment result page.
-- [ ] Login, register, account (name / avatar / password), orders list + detail with timeline.
+- [x] UI primitives (button, input, select, card, badge, dialog, table, skeleton, toast).
+- [x] Header (search dropdown, cart badge, account menu), footer.
+- [x] Home, product page, search page, category filter, pagination, sort.
+- [x] Cart (guest + logged in, merge on login), checkout, mock payment page, payment result page.
+- [x] Login, register, account (name / avatar / password), orders list + detail with timeline.
 - **Done when:** full customer flow works against the dev API.
 
 ### Phase 6 — Web: admin & logistics
@@ -522,3 +522,9 @@ Each phase ends with something that runs. Commits are made per phase on a branch
   `SEED_ON_START`) with 8 compressed photos (48 MB -> 0.6 MB). 102 tests. Notes: the minimum order applies to the items (subtotal), not to the delivery
   fee; logistics endpoints are for the `logistics` role only (admins use their own screens); cancelling a paid order lowers the "most bought" counter
   but does not refund (no refund automation).
+- 2026-11-05 — Phase 5 done: React 19 + Vite 8 + React Router 8 + TanStack Query + Tailwind v4 storefront. Home (hero, most bought, category chips, sort,
+  pagination – all in the URL), product page (refresh-safe), instant search dropdown (debounced, arrow keys, Enter, Esc) + results page, one cart hook
+  for guests (localStorage) and users (server) with merge on login, checkout (address prefilled from the last order), mock payment + result pages,
+  orders list + detail with timeline, account (name, photo, password), login/register, dark mode, mobile. Checked in a real browser (Playwright).
+  Deviations: `GET /api/auth/me` answers `{ user: null }` (200) for visitors instead of 401, so a normal page load logs no console errors; the
+  same-origin check also accepts the `APP_URL` origin (reverse proxies that rewrite `Host`); Vite's proxy keeps the browser `Host`.

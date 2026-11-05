@@ -103,17 +103,17 @@ describe('POST /api/auth/login', () => {
 });
 
 describe('GET /api/auth/me and POST /api/auth/logout', () => {
-  it('is 401 without a session', async () => {
+  it('says "nobody" (not an error) without a session', async () => {
     const res = await request(ctx.app).get('/api/auth/me');
-    expect(res.status).toBe(401);
-    expect(res.body.error.code).toBe('unauthorized');
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ user: null });
   });
 
   it('returns the logged in user', async () => {
     const { agent, user } = await loginAs(ctx, 'customer');
     const res = await agent.get('/api/auth/me');
     expect(res.status).toBe(200);
-    expect(res.body).toMatchObject({
+    expect(res.body.user).toMatchObject({
       id: user.id,
       email: user.email,
       role: 'customer',
@@ -123,17 +123,24 @@ describe('GET /api/auth/me and POST /api/auth/logout', () => {
 
   it('does not accept a tampered or garbage cookie', async () => {
     const { agent } = await loginAs(ctx, 'customer');
-    await agent.get('/api/auth/me').expect(200);
+    expect((await agent.get('/api/auth/me')).body.user).not.toBeNull();
 
-    await request(ctx.app).get('/api/auth/me').set('Cookie', 'c2h_token=not.a.jwt').expect(401);
+    const garbage = await request(ctx.app).get('/api/auth/me').set('Cookie', 'c2h_token=not.a.jwt');
+    expect(garbage.body).toEqual({ user: null });
     const forged = 'eyJhbGciOiJub25lIn0.eyJzdWIiOiI1MDdmMWY3N2JjZjg2Y2Q3OTk0MzkwMTEifQ.';
-    await request(ctx.app).get('/api/auth/me').set('Cookie', `c2h_token=${forged}`).expect(401);
+    const unsigned = await request(ctx.app)
+      .get('/api/auth/me')
+      .set('Cookie', `c2h_token=${forged}`);
+    expect(unsigned.body).toEqual({ user: null });
+    // and a forged token does not open protected routes either
+    await request(ctx.app).get('/api/cart').set('Cookie', `c2h_token=${forged}`).expect(401);
   });
 
   it('stops working once the user is deleted', async () => {
     const { agent, user } = await loginAs(ctx, 'customer');
     await user.deleteOne();
-    await agent.get('/api/auth/me').expect(401);
+    expect((await agent.get('/api/auth/me')).body).toEqual({ user: null });
+    await agent.get('/api/cart').expect(401);
   });
 
   it('logout clears the cookie', async () => {
@@ -141,7 +148,7 @@ describe('GET /api/auth/me and POST /api/auth/logout', () => {
     const res = await agent.post('/api/auth/logout');
     expect(res.status).toBe(204);
     expect(setCookies(res)[0]).toMatch(/c2h_token=;/);
-    await agent.get('/api/auth/me').expect(401);
+    expect((await agent.get('/api/auth/me')).body).toEqual({ user: null });
   });
 });
 
@@ -152,6 +159,16 @@ describe('same-origin protection', () => {
       .set('Origin', 'https://evil.example')
       .send({ email: 'a@b.co', password: 'whatever1' });
     expect(res.status).toBe(403);
+  });
+
+  it('allows the public URL even when a proxy rewrote the Host header', async () => {
+    const user = await createUser('customer');
+    const res = await request(ctx.app)
+      .post('/api/auth/login')
+      .set('Host', 'app-internal:3000')
+      .set('Origin', 'http://localhost:8080') // = APP_URL in the test config
+      .send({ email: user.email, password: PASSWORD });
+    expect(res.status).toBe(200);
   });
 
   it('allows the site itself', async () => {

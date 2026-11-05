@@ -13,7 +13,7 @@ import { orderReceivedEmail, orderStatusEmail, type StatusEmailKind } from '../.
 import { sendInBackground } from '../../mail/mailer';
 import type { AuthUser } from '../../middleware/auth';
 import { Order, Product, User, type CategoryDoc, type OrderDoc } from '../../models';
-import { priceCart } from '../cart/pricing';
+import { priceCart } from '@cart2heavy/shared';
 import { presentOrders } from './presenter';
 
 type LeanOrder = WithId<OrderDoc>;

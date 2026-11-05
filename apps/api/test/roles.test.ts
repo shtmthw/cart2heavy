@@ -41,9 +41,9 @@ describe('role guard', () => {
 
   it('a role change in the database applies on the next request', async () => {
     const { agent, user } = await loginAs(ctx, 'customer');
-    expect((await agent.get('/api/auth/me')).body.role).toBe('customer');
+    expect((await agent.get('/api/auth/me')).body.user.role).toBe('customer');
     user.role = 'admin';
     await user.save();
-    expect((await agent.get('/api/auth/me')).body.role).toBe('admin');
+    expect((await agent.get('/api/auth/me')).body.user.role).toBe('admin');
   });
 });

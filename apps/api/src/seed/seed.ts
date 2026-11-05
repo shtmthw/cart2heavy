@@ -5,7 +5,7 @@ import { slugify, type OrderStatus } from '@cart2heavy/shared';
 import type { AppConfig } from '../config/env';
 import type { Logger } from '../logger';
 import { Category, MockPayment, Order, Product, User } from '../models';
-import { priceCart } from '../modules/cart/pricing';
+import { priceCart } from '@cart2heavy/shared';
 import { DEMO_PASSWORDS, SEED_CATEGORIES, SEED_ORDERS, SEED_PRODUCTS } from './data';
 
 const HOUR = 60 * 60 * 1000;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { priceCart } from '../src/modules/cart/pricing';
+import { priceCart } from './pricing';
 
 const rules = { deliveryCents: 180, minOrderCents: 2500 };
 const line = (priceCents: number, quantity = 1, isActive = true) => ({

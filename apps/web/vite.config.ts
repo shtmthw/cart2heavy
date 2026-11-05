@@ -10,9 +10,11 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     port: 5173,
+    // keep the browser's Host header (changeOrigin: false): the API checks that the Origin of
+    // state-changing requests matches it
     proxy: {
-      '/api': api,
-      '/uploads': api,
+      '/api': { target: api, changeOrigin: false },
+      '/uploads': { target: api, changeOrigin: false },
     },
   },
 });

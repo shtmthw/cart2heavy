@@ -1,15 +1,8 @@
 import { Router, type RequestHandler } from 'express';
-import { loginSchema, registerSchema } from '@cart2heavy/shared';
+import { loginSchema, registerSchema, type UserDTO } from '@cart2heavy/shared';
 import type { AppContext } from '../../context';
 import { toUserDTO } from '../../dto';
-import {
-  clearAuthCookie,
-  currentUser,
-  requireAuth,
-  setAuthCookie,
-  signToken,
-} from '../../middleware/auth';
-import { HttpError } from '../../errors';
+import { clearAuthCookie, setAuthCookie, signToken } from '../../middleware/auth';
 import { User } from '../../models';
 import { registerCustomer, verifyLogin } from './service';
 
@@ -35,10 +28,11 @@ export function authRoutes({ config }: AppContext, limiter: RequestHandler): Rou
     res.status(204).end();
   });
 
-  router.get('/me', requireAuth, async (req, res) => {
-    const user = await User.findById(currentUser(req).id).lean();
-    if (!user) throw HttpError.unauthorized();
-    res.json(toUserDTO(user));
+  /** Who am I? `{ user: null }` (not a 401) for visitors, so a normal page load logs no errors. */
+  router.get('/me', async (req, res) => {
+    const user = req.user ? await User.findById(req.user.id).lean() : null;
+    const body: { user: UserDTO | null } = { user: user ? toUserDTO(user) : null };
+    res.json(body);
   });
 
   return router;

@@ -3,7 +3,7 @@ import type { AppConfig } from '../../config/env';
 import { toCartDTO, type CartLineInput } from '../../dto';
 import { HttpError } from '../../errors';
 import { Product, User } from '../../models';
-import { priceCart } from './pricing';
+import { priceCart } from '@cart2heavy/shared';
 
 /** The user's cart with live product data and totals. Lines whose product was deleted are dropped. */
 export async function getCart(config: AppConfig, userId: string): Promise<CartDTO> {

@@ -10,7 +10,6 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@cart2heavy/shared": "workspace:*",
     "@hookform/resolvers": "^7.0.2",
     "@tanstack/react-query": "^5.105.3",
     "clsx": "^2.1.1",
@@ -24,6 +23,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@cart2heavy/shared": "workspace:*",
     "@tailwindcss/vite": "^4.3.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

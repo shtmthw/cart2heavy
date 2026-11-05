@@ -1,0 +1,54 @@
+# docker compose up
+#   store      http://localhost:8080         (admin: /admin, logistics: /logistics)
+#   emails     http://localhost:8025         (Mailpit catches every email the shop sends)
+#
+# Nothing to configure: the defaults below give you a working shop with demo data and simulated
+# payments. Copy .env.example to .env only if you want to change something (see README.md).
+
+services:
+  app:
+    image: matthew552/cart2heavy:latest # pulled from Docker Hub ...
+    build: . #                            ... or built from this folder with `docker compose up --build`
+    restart: unless-stopped
+    ports:
+      # only this computer by default; set APP_BIND=0.0.0.0 to open it to your network
+      - '${APP_BIND:-127.0.0.1}:${APP_PORT:-8080}:8080'
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/cart2heavy
+      APP_URL: http://localhost:${APP_PORT:-8080}
+      JWT_SECRET: ${JWT_SECRET:-} # empty = the app creates a random secret and keeps it in the database
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      DELIVERY_FEE_CENTS: ${DELIVERY_FEE_CENTS:-180}
+      MIN_ORDER_CENTS: ${MIN_ORDER_CENTS:-2500}
+      SMTP_HOST: mailpit
+      SMTP_PORT: '1025'
+      SEED_ON_START: ${SEED_ON_START:-true} # fills an EMPTY database with demo data and demo accounts
+    volumes:
+      - uploads:/app/uploads
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  mailpit:
+    image: axllent/mailpit
+    restart: unless-stopped
+    ports:
+      - '${APP_BIND:-127.0.0.1}:8025:8025'
+
+volumes:
+  mongo-data:
+  uploads:

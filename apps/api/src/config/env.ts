@@ -17,7 +17,11 @@ const envSchema = z.object({
   PORT: z.coerce.number().int().min(1).max(65535).default(8080),
   APP_URL: z.url().default('http://localhost:8080'),
   MONGODB_URI: z.string().min(1, 'is required, e.g. mongodb://127.0.0.1:27017/cart2heavy'),
-  JWT_SECRET: z.string().min(16, 'must be at least 16 characters (use a long random string)'),
+  // optional: when it is not set the server creates a random secret and keeps it in the database
+  JWT_SECRET: z.preprocess(
+    blankToUndefined,
+    z.string().min(16, 'must be at least 16 characters (use a long random string)').optional(),
+  ),
   UPLOAD_DIR: z.string().default('./uploads'),
   SEED_IMAGES_DIR: z.string().default('./src/seed/images'),
   WEB_DIST: optionalString,
@@ -41,7 +45,10 @@ export interface AppConfig {
   /** public origin of the site, without a trailing slash */
   appUrl: string;
   mongoUri: string;
+  /** empty until `ensureJwtSecret` ran when JWT_SECRET is not configured */
   jwtSecret: string;
+  /** true when the secret has to be created / loaded from the database at start-up */
+  jwtSecretFromDatabase: boolean;
   /** absolute path */
   uploadDir: string;
   /** absolute path of the demo product photos used by the seed */
@@ -63,8 +70,6 @@ export interface AppConfig {
   secureCookies: boolean;
   bcryptRounds: number;
 }
-
-export const DEV_JWT_SECRET = 'dev-only-change-me';
 
 export class ConfigError extends Error {
   constructor(public readonly problems: string[]) {
@@ -96,7 +101,8 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     port: env.PORT,
     appUrl,
     mongoUri: env.MONGODB_URI,
-    jwtSecret: env.JWT_SECRET,
+    jwtSecret: env.JWT_SECRET ?? '',
+    jwtSecretFromDatabase: !env.JWT_SECRET,
     uploadDir: path.resolve(env.UPLOAD_DIR),
     seedImagesDir: path.resolve(env.SEED_IMAGES_DIR),
     webDist: env.WEB_DIST ? path.resolve(env.WEB_DIST) : undefined,

@@ -446,9 +446,9 @@ Each phase ends with something that runs. Commits are made per phase on a branch
       sees each step.
 
 ### Phase 7 — Docker
-- [ ] Multi-stage `Dockerfile`, `.dockerignore`, API serves SPA (history fallback) + `/uploads`.
-- [ ] `docker-compose.yml` (app + mongo + mailpit, healthchecks, volumes, defaults).
-- [ ] Image hygiene: non-root user, no dev dependencies, no secrets, reasonable size (target < 250 MB).
+- [x] Multi-stage `Dockerfile`, `.dockerignore`, API serves SPA (history fallback) + `/uploads`.
+- [x] `docker-compose.yml` (app + mongo + mailpit, healthchecks, volumes, defaults).
+- [x] Image hygiene: non-root user, no dev dependencies, no secrets, reasonable size (target < 250 MB; actual: ~312 MB unpacked / ~100 MB compressed, of which the `node:24-alpine` base is ~255 MB – see the progress log).
 - **Done when:** `docker compose up --build` on a clean machine state → store at :8080, seeded.
 
 ### Phase 8 — Tests, e2e & screenshots
@@ -532,3 +532,9 @@ Each phase ends with something that runs. Commits are made per phase on a branch
   upload and preview, categories manager with package size, orders table with filters, detail dialog, confirm / cancel) and logistics (queue, package
   size, address, one-click next step with toast, auto-refresh every 30 s). Verified in a browser as admin, logistics and customer (a customer on
   `/admin` sees "no access"). `AdminStatsDTO.awaitingConfirmation` added.
+- 2026-11-05 — Phase 7 done: multi-stage `Dockerfile` (build / production dependencies via `pnpm deploy --prod` / empty uploads dir / runtime), final
+  stage has no `RUN`, runs as `node`, healthcheck on `/api/health`, no secrets in the image. `docker-compose.yml`: app + mongo (healthcheck, not
+  published) + mailpit; the app and Mailpit listen on 127.0.0.1 by default (`APP_BIND=0.0.0.0` opens them). Verified: seeded on first start only, SPA
+  routes, uploads on the volume as the unprivileged user, data and sessions survive a restart. Extra hardening over the plan: with no `JWT_SECRET`
+  the server creates a random secret once and keeps it in MongoDB (no well-known default secret in compose). Image size: the Node 24 Alpine base
+  alone is ~255 MB unpacked, so the 250 MB target is missed by ~60 MB (production dependencies are 58 MB, `stripe` alone 22 MB); accepted.

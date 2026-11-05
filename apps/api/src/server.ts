@@ -1,21 +1,19 @@
 import { createApp } from './app';
 import { loadDotEnv } from './config/dotenv';
-import { ConfigError, DEV_JWT_SECRET, loadConfig } from './config/env';
+import { ConfigError, loadConfig } from './config/env';
+import { ensureJwtSecret } from './config/secret';
 import { connectDb, disconnectDb } from './db';
 import { createLogger } from './logger';
 import { seedDatabase } from './seed/seed';
 
 async function main() {
   loadDotEnv();
-  const config = loadConfig();
-  const logger = createLogger(config);
+  const loaded = loadConfig();
+  const logger = createLogger(loaded);
 
-  if (config.isProduction && config.jwtSecret === DEV_JWT_SECRET) {
-    logger.warn('JWT_SECRET is the built-in development value – set your own before going live');
-  }
-
-  await connectDb(config.mongoUri);
+  await connectDb(loaded.mongoUri);
   logger.info('connected to MongoDB');
+  const config = await ensureJwtSecret(loaded);
 
   if (config.seedOnStart && (await seedDatabase({ config, logger }))) {
     logger.info('the database was empty, demo data was added (SEED_ON_START=true)');

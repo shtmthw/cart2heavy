@@ -26,11 +26,11 @@ describe('who may use /api/logistics', () => {
     ['patch', `/api/logistics/orders/${FAKE_ID}/status`],
   ];
 
-  it('rejects anonymous visitors, customers and even admins', async () => {
+  it('rejects anonymous visitors and customers', async () => {
     for (const [method, url] of endpoints) {
       expect((await request(ctx.app)[method](url)).status, `anonymous ${url}`).toBe(401);
     }
-    for (const role of ['customer', 'admin'] as const) {
+    for (const role of ['customer'] as const) {
       const { agent } = await loginAs(ctx, role);
       for (const [method, url] of endpoints) {
         expect((await agent[method](url)).status, `${role} ${method} ${url}`).toBe(403);

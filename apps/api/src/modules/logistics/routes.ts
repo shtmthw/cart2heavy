@@ -8,10 +8,10 @@ import type { AppContext } from '../../context';
 import { currentUser, requireRole } from '../../middleware/auth';
 import { listQueue, moveOrder } from './service';
 
-/** /api/logistics/* – logistics accounts only. */
+/** /api/logistics/* – logistics accounts, and admins (who can do everything). */
 export function logisticsRoutes(ctx: AppContext): Router {
   const router = Router();
-  router.use(requireRole('logistics'));
+  router.use(requireRole('logistics', 'admin'));
 
   router.get('/orders', async (req, res) => {
     const { status } = logisticsOrdersQuerySchema.parse(req.query);

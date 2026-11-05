@@ -25,14 +25,15 @@ test.describe('who can see what', () => {
     expect(create.status()).toBe(403);
   });
 
-  test('admin and logistics each get their own area and not the other one', async ({ browser }) => {
+  test('admin can use both areas, logistics only its own', async ({ browser }) => {
     const adminContext = await browser.newContext();
     const admin = await adminContext.newPage();
     await logInAs(admin, 'admin');
     await expect(admin.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+    // admins may also use the logistics panel
     await admin.goto('/logistics');
-    await expect(admin.getByText('You do not have access to this page')).toBeVisible();
-    expect((await admin.request.get(`${baseURL}/api/logistics/orders`)).status()).toBe(403);
+    await expect(admin.getByRole('heading', { name: 'Queue' })).toBeVisible();
+    expect((await admin.request.get(`${baseURL}/api/logistics/orders`)).status()).toBe(200);
     await adminContext.close();
 
     const logisticsContext = await browser.newContext();

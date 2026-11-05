@@ -26,7 +26,7 @@ export function RequireAuth() {
 }
 
 /** Pages for one role (admin or logistics). The API enforces the same rule – this is only UX. */
-export function RequireRole({ role }: { role: Role }) {
+export function RequireRole({ roles }: { roles: Role[] }) {
   const { user, isLoading } = useAuth();
   const location = useLocation();
   if (isLoading) return <Loading />;
@@ -34,13 +34,13 @@ export function RequireRole({ role }: { role: Role }) {
     const next = encodeURIComponent(`${location.pathname}${location.search}`);
     return <Navigate to={`/login?next=${next}`} replace />;
   }
-  if (user.role !== role) {
+  if (!roles.includes(user.role)) {
     return (
       <EmptyState
         title="You do not have access to this page"
         action={<ButtonLink to="/">Back to the shop</ButtonLink>}
       >
-        This area is for {role} accounts.
+        This area is for {roles.join(' and ')} accounts.
       </EmptyState>
     );
   }

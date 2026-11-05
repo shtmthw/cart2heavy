@@ -86,7 +86,7 @@ export function AccountMenu() {
               Admin panel
             </MenuLink>
           )}
-          {user.role === 'logistics' && (
+          {(user.role === 'logistics' || user.role === 'admin') && (
             <MenuLink to="/logistics" icon={<Truck className={icon} aria-hidden />}>
               Logistics panel
             </MenuLink>

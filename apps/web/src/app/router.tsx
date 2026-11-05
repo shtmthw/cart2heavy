@@ -22,8 +22,8 @@ const PageSpinner = () => (
   </div>
 );
 
-const RequireAdmin = () => <RequireRole role="admin" />;
-const RequireLogistics = () => <RequireRole role="logistics" />;
+const RequireAdmin = () => <RequireRole roles={['admin']} />;
+const RequireLogistics = () => <RequireRole roles={['logistics', 'admin']} />;
 
 /** Admin and logistics screens are only downloaded by the people who use them. */
 const staff = () => import('../features/admin/routes');

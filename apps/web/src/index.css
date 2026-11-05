@@ -2,7 +2,7 @@
 @import '@fontsource-variable/plus-jakarta-sans';
 @import 'tailwindcss';
 
-/* The whole site is one dark theme: slate #363948 for the page, a lighter slate for cards, lavender accent. */
+/* The whole site is one dark theme: slate #262833 for the page, a lighter slate for cards, lavender accent. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -21,9 +21,9 @@
   --color-zinc-500: #a3abc4;
   --color-zinc-600: #8a92ac;
   --color-zinc-700: #747a93;
-  --color-zinc-800: #585d74;
-  --color-zinc-900: #464a5d;
-  --color-zinc-950: #363948;
+  --color-zinc-800: #484c61;
+  --color-zinc-900: #343747;
+  --color-zinc-950: #262833;
 
   --font-sans:
     'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;

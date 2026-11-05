@@ -1,6 +1,6 @@
 # REFRACTOR.md — cart2heavy → TypeScript
 
-> Status: **Phases 1–9 DONE on `refactor/typescript` — Phase 10 (publish) pending** · Author: Claude (with Matthew) · Date: 2026-11-05
+> Status: **Phases 1–9 DONE on `refactor/typescript` — Phase 10: image built and verified, the Docker Hub push is waiting for you** · Author: Claude (with Matthew) · Date: 2026-11-05
 >
 > This document is the step-by-step plan for rewriting cart2heavy in TypeScript, making it work
 > better, giving it a minimal UI, dockerizing it, and publishing the image to Docker Hub. Each
@@ -467,8 +467,13 @@ Each phase ends with something that runs. Commits are made per phase on a branch
 
 ### Phase 10 — Publish
 - [ ] `docker buildx … --push` to Docker Hub (`matthew552/cart2heavy:1.0.0` + `:latest`).
-- [ ] Check it from a clean state: `docker image rm` → fresh `git clone` into a temp folder →
-      `docker compose up` → pulls from Docker Hub → smoke test passes.
+      **Not done yet:** the permission system blocked the push (it publishes a public image), so it waits for your go. Everything before the push is done:
+      a `docker-container` builder `c2h-builder` exists, the exact multi-arch build (`linux/amd64` + `linux/arm64`) was run to an OCI archive, and the
+      image was scanned for secrets (none). Run it yourself (type `!` before it in Claude Code to run it in the session):
+      `docker buildx build --builder c2h-builder --platform linux/amd64,linux/arm64 -t matthew552/cart2heavy:1.0.0 -t matthew552/cart2heavy:latest --push .`
+- [~] Check it from a clean state. Done without the Hub: local image removed → fresh `git clone` of the branch → `docker compose up -d` (it builds the
+      image itself while it is not on Docker Hub) → store, the three demo logins, `create-user` and the uploads volume verified. **Still to do after the
+      push:** `docker image rm matthew552/cart2heavy:latest` → fresh clone → `docker compose up` must now *pull* → same smoke test.
 
 ---
 
@@ -589,3 +594,5 @@ Playwright tests + screenshots). One Docker image (`matthew552/cart2heavy`) that
 were added for the guest cart; product search is a regex, not a text index; logistics endpoints are for the `logistics` role only; the Docker
 image is ~312 MB unpacked (target was 250); the compose ports listen on 127.0.0.1 by default and the session secret is generated when unset;
 `create-user` and `docker-compose.dev.yml` were added.
+- 2026-11-05 — Phase 10 prepared, not finished: multi-arch build verified locally, fresh-clone `docker compose up` verified (builds locally), final
+  `pnpm e2e` 19/19 green. Waiting for the Docker Hub push (see Phase 10 above).

@@ -231,8 +231,8 @@ docker buildx build --platform linux/amd64,linux/arm64 \
   -t matthew552/cart2heavy:1.0.0 -t matthew552/cart2heavy:latest --push .
 ```
 
-`docker compose up` pulls `matthew552/cart2heavy:latest`; `docker compose up --build` builds the image
-from the checkout instead.
+`docker compose up` uses `matthew552/cart2heavy:latest` (pulled from Docker Hub, or built from the
+checkout when it is not there); `docker compose up --build` always builds the image from the checkout.
 
 ---
 

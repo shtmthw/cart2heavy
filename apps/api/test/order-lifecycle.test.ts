@@ -162,6 +162,7 @@ describe('admin: orders list, confirm, cancel', () => {
     expect(stats.body.revenueCents).toBe(30_180 + 30_180);
     expect(stats.body.ordersTotal).toBe(3);
     expect(stats.body.ordersPaid).toBe(2);
+    expect(stats.body.awaitingConfirmation).toBe(2); // paid and still processing
     expect(stats.body.ordersByStatus).toMatchObject({
       processing: 3,
       confirmed: 0,

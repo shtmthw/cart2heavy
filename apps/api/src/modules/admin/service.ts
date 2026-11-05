@@ -73,13 +73,14 @@ export async function cancelOrder(ctx: AppContext, adminId: string, orderId: str
 }
 
 export async function getStats(): Promise<AdminStatsDTO> {
-  const [byStatus, revenue, ordersPaid, top] = await Promise.all([
+  const [byStatus, revenue, ordersPaid, awaitingConfirmation, top] = await Promise.all([
     Order.aggregate<{ _id: OrderStatus; count: number }>([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
     Order.aggregate<{ revenue: number }>([
       { $match: { 'payment.status': 'paid', status: { $ne: 'cancelled' } } },
       { $group: { _id: null, revenue: { $sum: '$totalCents' } } },
     ]),
     Order.countDocuments({ 'payment.status': 'paid' }),
+    Order.countDocuments({ 'payment.status': 'paid', status: 'processing' }),
     Product.find({ totalBought: { $gt: 0 } })
       .sort({ totalBought: -1, name: 1 })
       .limit(5)
@@ -94,6 +95,7 @@ export async function getStats(): Promise<AdminStatsDTO> {
     revenueCents: revenue[0]?.revenue ?? 0,
     ordersTotal: Object.values(ordersByStatus).reduce((a, b) => a + b, 0),
     ordersPaid,
+    awaitingConfirmation,
     ordersByStatus,
     topProducts: top.map((p) => ({
       id: p._id.toString(),

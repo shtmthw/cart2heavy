@@ -3,10 +3,17 @@ import { ORDER_STATUS_LABELS, TIMELINE_STATUSES, type OrderDTO } from '@cart2hea
 import { cn, formatDateTime } from '../../lib/utils';
 
 /** processing → confirmed → … → delivered, with the time of every step that happened. */
-export function OrderTimeline({ order }: { order: Pick<OrderDTO, 'status' | 'statusHistory'> }) {
-  const at = new Map(order.statusHistory.map((event) => [event.status, event.at]));
+export function OrderTimeline({
+  order,
+  compact = false,
+}: {
+  order: Pick<OrderDTO, 'status' | 'statusHistory'>;
+  /** only list what already happened (for the admin, who does not need the whole road) */
+  compact?: boolean;
+}) {
+  const events = new Map(order.statusHistory.map((event) => [event.status, event]));
 
-  if (order.status === 'cancelled') {
+  if (order.status === 'cancelled' || compact) {
     return (
       <ol className="space-y-4">
         {order.statusHistory.map((event) => (
@@ -18,7 +25,10 @@ export function OrderTimeline({ order }: { order: Pick<OrderDTO, 'status' | 'sta
             )}
             <div>
               <p className="text-sm font-medium">{ORDER_STATUS_LABELS[event.status].label}</p>
-              <p className="text-xs text-zinc-500">{formatDateTime(event.at)}</p>
+              <p className="text-xs text-zinc-500">
+                {formatDateTime(event.at)}
+                {event.by ? ` · ${event.by}` : ''}
+              </p>
             </div>
           </li>
         ))}
@@ -32,7 +42,7 @@ export function OrderTimeline({ order }: { order: Pick<OrderDTO, 'status' | 'sta
       {TIMELINE_STATUSES.map((status, index) => {
         const done = index < currentIndex || (index === currentIndex && status === 'delivered');
         const current = index === currentIndex;
-        const time = at.get(status);
+        const event = events.get(status);
         const last = index === TIMELINE_STATUSES.length - 1;
         return (
           <li
@@ -71,8 +81,11 @@ export function OrderTimeline({ order }: { order: Pick<OrderDTO, 'status' | 'sta
                 {ORDER_STATUS_LABELS[status].label}
                 {current && <span className="sr-only"> (current step)</span>}
               </p>
-              {time ? (
-                <p className="text-xs text-zinc-500">{formatDateTime(time)}</p>
+              {event ? (
+                <p className="text-xs text-zinc-500">
+                  {formatDateTime(event.at)}
+                  {event.by ? ` · ${event.by}` : ''}
+                </p>
               ) : current ? (
                 <p className="text-xs text-zinc-500">{ORDER_STATUS_LABELS[status].description}</p>
               ) : null}

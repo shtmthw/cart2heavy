@@ -10,9 +10,23 @@ import { OrderDetailPage } from '../features/orders/OrderDetailPage';
 import { OrdersPage } from '../features/orders/OrdersPage';
 import { ProductPage } from '../features/product/ProductPage';
 import { SearchPage } from '../features/search/SearchPage';
-import { RequireAuth } from './guards';
+import { Spinner } from '../components/ui/skeleton';
+import { RequireAuth, RequireRole } from './guards';
 import { StoreLayout } from './layouts/StoreLayout';
 import { NotFoundPage, RouteError } from './NotFound';
+
+/** Shown while a lazily loaded staff area is being downloaded on the very first page view. */
+const PageSpinner = () => (
+  <div className="grid min-h-dvh place-items-center">
+    <Spinner className="size-6" />
+  </div>
+);
+
+const RequireAdmin = () => <RequireRole role="admin" />;
+const RequireLogistics = () => <RequireRole role="logistics" />;
+
+/** Admin and logistics screens are only downloaded by the people who use them. */
+const staff = () => import('../features/admin/routes');
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +52,37 @@ export const router = createBrowserRouter([
         ],
       },
       { path: '*', Component: NotFoundPage },
+    ],
+  },
+  {
+    path: '/admin',
+    Component: RequireAdmin,
+    HydrateFallback: PageSpinner,
+    ErrorBoundary: RouteError,
+    children: [
+      {
+        lazy: async () => ({ Component: (await staff()).AdminLayout }),
+        children: [
+          { index: true, lazy: async () => ({ Component: (await staff()).DashboardPage }) },
+          { path: 'products', lazy: async () => ({ Component: (await staff()).ProductsPage }) },
+          { path: 'categories', lazy: async () => ({ Component: (await staff()).CategoriesPage }) },
+          { path: 'orders', lazy: async () => ({ Component: (await staff()).OrdersPage }) },
+        ],
+      },
+    ],
+  },
+  {
+    path: '/logistics',
+    Component: RequireLogistics,
+    HydrateFallback: PageSpinner,
+    ErrorBoundary: RouteError,
+    children: [
+      {
+        lazy: async () => ({ Component: (await staff()).LogisticsLayout }),
+        children: [
+          { index: true, lazy: async () => ({ Component: (await staff()).LogisticsPage }) },
+        ],
+      },
     ],
   },
 ]);

@@ -137,6 +137,8 @@ export interface AdminStatsDTO {
   revenueCents: number;
   ordersTotal: number;
   ordersPaid: number;
+  /** paid orders still in "processing": waiting for the admin to confirm them */
+  awaitingConfirmation: number;
   ordersByStatus: Record<OrderStatus, number>;
   topProducts: Pick<ProductDTO, 'id' | 'name' | 'imageUrl' | 'totalBought'>[];
 }

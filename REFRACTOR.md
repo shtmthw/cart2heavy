@@ -437,11 +437,11 @@ Each phase ends with something that runs. Commits are made per phase on a branch
 - **Done when:** full customer flow works against the dev API.
 
 ### Phase 6 — Web: admin & logistics
-- [ ] Admin layout + dashboard stats.
-- [ ] Products table + create/edit form (image upload, preview), delete with confirmation.
-- [ ] Categories manager.
-- [ ] Orders table + filters + detail + confirm/cancel.
-- [ ] Logistics queue + one-click status step + package-size label.
+- [x] Admin layout + dashboard stats.
+- [x] Products table + create/edit form (image upload, preview), delete with confirmation.
+- [x] Categories manager.
+- [x] Orders table + filters + detail + confirm/cancel.
+- [x] Logistics queue + one-click status step + package-size label.
 - **Done when:** a seeded order can go processing → confirmed → … → delivered, and the customer
       sees each step.
 
@@ -528,3 +528,7 @@ Each phase ends with something that runs. Commits are made per phase on a branch
   orders list + detail with timeline, account (name, photo, password), login/register, dark mode, mobile. Checked in a real browser (Playwright).
   Deviations: `GET /api/auth/me` answers `{ user: null }` (200) for visitors instead of 401, so a normal page load logs no console errors; the
   same-origin check also accepts the `APP_URL` origin (reverse proxies that rewrite `Host`); Vite's proxy keeps the browser `Host`.
+- 2026-11-05 — Phase 6 done: lazy-loaded admin (dashboard with an "awaiting confirmation" count, products table with create / edit / delete + photo
+  upload and preview, categories manager with package size, orders table with filters, detail dialog, confirm / cancel) and logistics (queue, package
+  size, address, one-click next step with toast, auto-refresh every 30 s). Verified in a browser as admin, logistics and customer (a customer on
+  `/admin` sees "no access"). `AdminStatsDTO.awaitingConfirmation` added.

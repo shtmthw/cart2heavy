@@ -184,7 +184,6 @@ Other server configuration options are documented in `.env.example`, including d
 
 Invalid configuration values cause the server to stop at startup and report the problems.
 
----
 
 ## Payments
 
@@ -242,7 +241,6 @@ checkout.session.completed
 
 Payment amounts are calculated from the server-side database, not supplied by the browser.
 
----
 
 ## Production deployment
 

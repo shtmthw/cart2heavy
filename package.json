@@ -18,7 +18,8 @@
     "test": "pnpm -r --workspace-concurrency=1 test",
     "seed": "pnpm --filter @cart2heavy/api seed",
     "e2e": "playwright test --config e2e/playwright.config.ts",
-    "screenshots": "playwright test --config e2e/playwright.screenshots.config.ts"
+    "screenshots": "playwright test --config e2e/playwright.screenshots.config.ts",
+    "create-user": "pnpm --filter @cart2heavy/api create-user"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

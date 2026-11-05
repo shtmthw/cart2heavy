@@ -1,7 +1,11 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: { server: 'src/server.ts', seed: 'src/seed/cli.ts' },
+  entry: {
+    server: 'src/server.ts',
+    seed: 'src/seed/cli.ts',
+    'create-user': 'src/seed/create-user.ts',
+  },
   format: ['esm'],
   target: 'node24',
   platform: 'node',

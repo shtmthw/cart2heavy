@@ -1,0 +1,15 @@
+# For working on the code (pnpm dev): starts only the things the app needs and publishes their ports
+# on this computer, so the app running from your checkout can reach them.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d mongo mailpit
+#
+# MongoDB    -> 127.0.0.1:27017   (what MONGODB_URI in .env.example points to)
+# Mailpit    -> SMTP 127.0.0.1:1025, inbox http://localhost:8025
+
+services:
+  mongo:
+    ports:
+      - '127.0.0.1:27017:27017'
+  mailpit:
+    ports:
+      - '127.0.0.1:1025:1025'

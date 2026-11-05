@@ -81,7 +81,11 @@ function ProductFormDialogBody({
 
   const save = useMutation({
     mutationFn: (form: FormData) =>
-      api.upload<ProductDTO>(product ? 'PATCH' : 'POST', product ? `/admin/products/${product.id}` : '/admin/products', form),
+      api.upload<ProductDTO>(
+        product ? 'PATCH' : 'POST',
+        product ? `/admin/products/${product.id}` : '/admin/products',
+        form,
+      ),
   });
 
   const onFile = (chosen: File | undefined) => {
@@ -166,7 +170,11 @@ function ProductFormDialogBody({
       </div>
 
       <TextField label="Name" error={errors.name?.message} {...register('name')} />
-      <TextArea label="Description" error={errors.description?.message} {...register('description')} />
+      <TextArea
+        label="Description"
+        error={errors.description?.message}
+        {...register('description')}
+      />
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField
           label="Price (USD)"
@@ -185,7 +193,11 @@ function ProductFormDialogBody({
         </SelectField>
       </div>
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" className="size-4 accent-[var(--color-accent)]" {...register('isActive')} />
+        <input
+          type="checkbox"
+          className="size-4 accent-[var(--color-accent)]"
+          {...register('isActive')}
+        />
         Visible in the shop
       </label>
 
@@ -218,9 +230,12 @@ export function ProductsPage() {
   const [deleting, setDeleting] = useState<ProductDTO | null>(null);
 
   const remove = useMutation({
-    mutationFn: (id: string) => api.delete<{ result: 'deleted' | 'hidden' }>(`/admin/products/${id}`),
+    mutationFn: (id: string) =>
+      api.delete<{ result: 'deleted' | 'hidden' }>(`/admin/products/${id}`),
     onSuccess: async ({ result }) => {
-      toast.success(result === 'deleted' ? 'Product deleted' : 'Product hidden (it was ordered before)');
+      toast.success(
+        result === 'deleted' ? 'Product deleted' : 'Product hidden (it was ordered before)',
+      );
       setDeleting(null);
       await queryClient.invalidateQueries({ queryKey: ['admin'] });
       await queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -249,7 +264,10 @@ export function ProductsPage() {
       )}
 
       <div className="relative mb-4 max-w-xs">
-        <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-400" aria-hidden />
+        <Search
+          className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-400"
+          aria-hidden
+        />
         <input
           type="search"
           aria-label="Search products"
@@ -266,7 +284,10 @@ export function ProductsPage() {
       {products.isPending ? (
         <Skeleton className="h-64 w-full" />
       ) : products.error ? (
-        <ErrorState message={errorMessage(products.error)} onRetry={() => void products.refetch()} />
+        <ErrorState
+          message={errorMessage(products.error)}
+          onRetry={() => void products.refetch()}
+        />
       ) : products.data.items.length === 0 ? (
         <EmptyState title={q ? 'No products match' : 'No products yet'}>
           {q ? 'Try another word.' : 'Add your first product to start selling.'}
@@ -291,19 +312,39 @@ export function ProductsPage() {
                 <tr key={product.id}>
                   <Td>
                     <div className="flex items-center gap-3">
-                      <img src={product.imageUrl} alt="" className="size-10 shrink-0 rounded object-cover" />
+                      <img
+                        src={product.imageUrl}
+                        alt=""
+                        className="size-10 shrink-0 rounded object-cover"
+                      />
                       <span className="max-w-64 truncate font-medium">{product.name}</span>
                     </div>
                   </Td>
                   <Td>{product.category?.name ?? '—'}</Td>
                   <Td className="text-right tabular-nums">{formatCents(product.priceCents)}</Td>
                   <Td className="text-right tabular-nums">{product.totalBought}</Td>
-                  <Td>{product.isActive ? <Badge tone="success">Visible</Badge> : <Badge>Hidden</Badge>}</Td>
+                  <Td>
+                    {product.isActive ? (
+                      <Badge tone="success">Visible</Badge>
+                    ) : (
+                      <Badge>Hidden</Badge>
+                    )}
+                  </Td>
                   <Td className="text-right whitespace-nowrap">
-                    <Button variant="ghost" size="sm" aria-label={`Edit ${product.name}`} onClick={() => setEditing(product)}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      aria-label={`Edit ${product.name}`}
+                      onClick={() => setEditing(product)}
+                    >
                       <Pencil className="size-4" aria-hidden />
                     </Button>
-                    <Button variant="ghost" size="sm" aria-label={`Delete ${product.name}`} onClick={() => setDeleting(product)}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      aria-label={`Delete ${product.name}`}
+                      onClick={() => setDeleting(product)}
+                    >
                       <Trash2 className="size-4" aria-hidden />
                     </Button>
                   </Td>
@@ -311,7 +352,11 @@ export function ProductsPage() {
               ))}
             </tbody>
           </Table>
-          <Pagination page={products.data.page} totalPages={products.data.totalPages} onPageChange={setPage} />
+          <Pagination
+            page={products.data.page}
+            totalPages={products.data.totalPages}
+            onPageChange={setPage}
+          />
         </>
       )}
 
@@ -335,8 +380,8 @@ export function ProductsPage() {
         onClose={() => setDeleting(null)}
         onConfirm={() => deleting && remove.mutate(deleting.id)}
       >
-        Delete “{deleting?.name}”? If customers have ordered it before, it is only hidden from the shop so their
-        orders stay intact.
+        Delete “{deleting?.name}”? If customers have ordered it before, it is only hidden from the
+        shop so their orders stay intact.
       </ConfirmDialog>
     </Container>
   );

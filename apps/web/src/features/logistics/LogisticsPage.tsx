@@ -75,7 +75,9 @@ function OrderCard({ order }: { order: OrderDTO }) {
             <span className="min-w-0 flex-1 truncate self-center">
               {item.quantity} × {item.name}
             </span>
-            <span className="self-center text-xs text-zinc-500">{WEIGHT_LABELS[item.weight].code}</span>
+            <span className="self-center text-xs text-zinc-500">
+              {WEIGHT_LABELS[item.weight].code}
+            </span>
           </li>
         ))}
       </ul>
@@ -111,7 +113,8 @@ export function LogisticsPage() {
   const [filter, setFilter] = useState<Filter>('open');
   const orders = useQuery({
     queryKey: ['logistics', 'orders', filter],
-    queryFn: () => api.get<OrderDTO[]>('/logistics/orders', { status: filter === 'open' ? undefined : filter }),
+    queryFn: () =>
+      api.get<OrderDTO[]>('/logistics/orders', { status: filter === 'open' ? undefined : filter }),
     refetchInterval: 30_000, // new confirmed orders show up on their own
   });
 
@@ -121,7 +124,11 @@ export function LogisticsPage() {
         title="Queue"
         description="Paid orders that were confirmed by the admin, oldest first."
         actions={
-          <CompactSelect label="Filter by status" value={filter} onChange={(e) => setFilter(e.target.value as Filter)}>
+          <CompactSelect
+            label="Filter by status"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value as Filter)}
+          >
             <option value="open">To ship (all open)</option>
             {LOGISTICS_STATUSES.map((s) => (
               <option key={s} value={s}>

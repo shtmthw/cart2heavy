@@ -2,10 +2,6 @@ node_modules
 dist
 coverage
 pnpm-lock.yaml
-Backend
-frontend
-admin
-logistics
 docs/screenshots
 apps/api/src/seed/images
 REFRACTOR.md

@@ -12,10 +12,6 @@ e2e
 docs
 playwright-report
 test-results
-Backend
-frontend
-admin
-logistics
 *.md
 !README.md
 .vscode

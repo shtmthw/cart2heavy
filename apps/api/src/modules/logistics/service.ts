@@ -32,7 +32,9 @@ export async function moveOrder(
   orderId: string,
   to: LogisticsStatus,
 ): Promise<OrderDTO> {
-  const current = await Order.findOne({ _id: orderId, 'payment.status': 'paid' }).select('status').lean();
+  const current = await Order.findOne({ _id: orderId, 'payment.status': 'paid' })
+    .select('status')
+    .lean();
   if (!current) throw HttpError.notFound('Order');
   if (!canLogisticsMove(current.status, to)) {
     throw HttpError.conflict(`An order that is "${current.status}" cannot be moved to "${to}"`);
@@ -44,5 +46,11 @@ export async function moveOrder(
     actorId: staffId,
     extra: { 'payment.status': 'paid' },
   });
-  return order ?? explainFailedTransition(orderId, 'This order was just updated by someone else. Refresh and try again.');
+  return (
+    order ??
+    explainFailedTransition(
+      orderId,
+      'This order was just updated by someone else. Refresh and try again.',
+    )
+  );
 }

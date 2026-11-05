@@ -9,7 +9,17 @@ import { errorMessage } from '../../lib/api';
 import { useDocumentTitle } from '../../lib/hooks';
 import { adminStatsQuery } from './queries';
 
-function Stat({ label, value, to, hint }: { label: string; value: string; to?: string; hint?: string }) {
+function Stat({
+  label,
+  value,
+  to,
+  hint,
+}: {
+  label: string;
+  value: string;
+  to?: string;
+  hint?: string;
+}) {
   const body = (
     <Card className="p-4 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/60">
       <p className="text-sm text-zinc-500">{label}</p>
@@ -50,7 +60,11 @@ export function DashboardPage() {
     <Container>
       <PageHeader title="Dashboard" description="How the shop is doing." />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Revenue" value={formatCents(data.revenueCents)} hint="Paid orders, without cancelled ones" />
+        <Stat
+          label="Revenue"
+          value={formatCents(data.revenueCents)}
+          hint="Paid orders, without cancelled ones"
+        />
         <Stat label="Orders" value={String(data.ordersTotal)} to="/admin/orders" />
         <Stat label="Paid orders" value={String(data.ordersPaid)} to="/admin/orders?payment=paid" />
         <Stat
@@ -99,10 +113,14 @@ export function DashboardPage() {
             <ol className="space-y-3">
               {data.topProducts.map((product, index) => (
                 <li key={product.id} className="flex items-center gap-3">
-                  <span className="w-4 text-center text-sm font-semibold text-accent tabular-nums">{index + 1}</span>
+                  <span className="w-4 text-center text-sm font-semibold text-accent tabular-nums">
+                    {index + 1}
+                  </span>
                   <img src={product.imageUrl} alt="" className="size-10 rounded object-cover" />
                   <span className="min-w-0 flex-1 truncate text-sm">{product.name}</span>
-                  <span className="text-sm text-zinc-500 tabular-nums">{product.totalBought} sold</span>
+                  <span className="text-sm text-zinc-500 tabular-nums">
+                    {product.totalBought} sold
+                  </span>
                 </li>
               ))}
             </ol>

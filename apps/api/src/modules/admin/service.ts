@@ -50,12 +50,22 @@ export async function confirmOrder(ctx: AppContext, adminId: string, orderId: st
     actorId: adminId,
     extra: { 'payment.status': 'paid' },
   });
-  return order ?? explainFailedTransition(orderId, 'Only paid orders that are still processing can be confirmed');
+  return (
+    order ??
+    explainFailedTransition(orderId, 'Only paid orders that are still processing can be confirmed')
+  );
 }
 
 export async function cancelOrder(ctx: AppContext, adminId: string, orderId: string) {
-  const allowedFrom = (['processing', 'confirmed'] as const).filter((status) => canAdminCancel({ status }));
-  const order = await transitionOrder(ctx, { orderId, from: [...allowedFrom], to: 'cancelled', actorId: adminId });
+  const allowedFrom = (['processing', 'confirmed'] as const).filter((status) =>
+    canAdminCancel({ status }),
+  );
+  const order = await transitionOrder(ctx, {
+    orderId,
+    from: [...allowedFrom],
+    to: 'cancelled',
+    actorId: adminId,
+  });
   if (!order) return explainFailedTransition(orderId, 'This order can no longer be cancelled');
 
   // a cancelled sale no longer counts as "bought" (there is no automatic refund)
@@ -74,7 +84,9 @@ export async function cancelOrder(ctx: AppContext, adminId: string, orderId: str
 
 export async function getStats(): Promise<AdminStatsDTO> {
   const [byStatus, revenue, ordersPaid, awaitingConfirmation, top] = await Promise.all([
-    Order.aggregate<{ _id: OrderStatus; count: number }>([{ $group: { _id: '$status', count: { $sum: 1 } } }]),
+    Order.aggregate<{ _id: OrderStatus; count: number }>([
+      { $group: { _id: '$status', count: { $sum: 1 } } },
+    ]),
     Order.aggregate<{ revenue: number }>([
       { $match: { 'payment.status': 'paid', status: { $ne: 'cancelled' } } },
       { $group: { _id: null, revenue: { $sum: '$totalCents' } } },
@@ -88,7 +100,10 @@ export async function getStats(): Promise<AdminStatsDTO> {
       .lean(),
   ]);
 
-  const ordersByStatus = Object.fromEntries(ORDER_STATUSES.map((s) => [s, 0])) as Record<OrderStatus, number>;
+  const ordersByStatus = Object.fromEntries(ORDER_STATUSES.map((s) => [s, 0])) as Record<
+    OrderStatus,
+    number
+  >;
   for (const row of byStatus) ordersByStatus[row._id] = row.count;
 
   return {

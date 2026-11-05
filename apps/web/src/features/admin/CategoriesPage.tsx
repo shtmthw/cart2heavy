@@ -146,10 +146,20 @@ export function CategoriesPage() {
                 </Td>
                 <Td className="text-right tabular-nums">{category.productCount ?? 0}</Td>
                 <Td className="text-right whitespace-nowrap">
-                  <Button variant="ghost" size="sm" aria-label={`Edit ${category.name}`} onClick={() => setEditing(category)}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    aria-label={`Edit ${category.name}`}
+                    onClick={() => setEditing(category)}
+                  >
                     <Pencil className="size-4" aria-hidden />
                   </Button>
-                  <Button variant="ghost" size="sm" aria-label={`Delete ${category.name}`} onClick={() => setDeleting(category)}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    aria-label={`Delete ${category.name}`}
+                    onClick={() => setDeleting(category)}
+                  >
                     <Trash2 className="size-4" aria-hidden />
                   </Button>
                 </Td>
@@ -164,7 +174,10 @@ export function CategoriesPage() {
         onClose={() => setEditing(null)}
         title={editing === 'new' ? 'New category' : 'Edit category'}
       >
-        <CategoryForm category={editing === 'new' ? undefined : (editing ?? undefined)} onDone={() => setEditing(null)} />
+        <CategoryForm
+          category={editing === 'new' ? undefined : (editing ?? undefined)}
+          onDone={() => setEditing(null)}
+        />
       </Dialog>
 
       <ConfirmDialog

@@ -34,7 +34,8 @@ function OrderDetails({ order }: { order: OrderDTO }) {
   const [cancelling, setCancelling] = useState(false);
 
   const act = useMutation({
-    mutationFn: (action: 'confirm' | 'cancel') => api.post<OrderDTO>(`/admin/orders/${order.id}/${action}`),
+    mutationFn: (action: 'confirm' | 'cancel') =>
+      api.post<OrderDTO>(`/admin/orders/${order.id}/${action}`),
     onSuccess: async (_updated, action) => {
       toast.success(action === 'confirm' ? 'Order confirmed' : 'Order cancelled');
       setCancelling(false);
@@ -46,7 +47,10 @@ function OrderDetails({ order }: { order: OrderDTO }) {
     },
   });
 
-  const confirmable = canAdminConfirm({ status: order.status, paymentStatus: order.payment.status });
+  const confirmable = canAdminConfirm({
+    status: order.status,
+    paymentStatus: order.payment.status,
+  });
   const cancellable = canAdminCancel({ status: order.status });
   const { address } = order;
   return (
@@ -67,16 +71,20 @@ function OrderDetails({ order }: { order: OrderDTO }) {
             </Button>
           )}
           {confirmable && (
-            <Button loading={act.isPending && act.variables === 'confirm'} onClick={() => act.mutate('confirm')}>
+            <Button
+              loading={act.isPending && act.variables === 'confirm'}
+              onClick={() => act.mutate('confirm')}
+            >
               Confirm order
             </Button>
           )}
           {!confirmable && order.status === 'processing' && (
-            <p className="mr-auto text-xs text-zinc-500">Waiting for the payment before it can be confirmed.</p>
+            <p className="mr-auto text-xs text-zinc-500">
+              Waiting for the payment before it can be confirmed.
+            </p>
           )}
         </div>
       )}
-
 
       <div className="grid gap-4 text-sm sm:grid-cols-2">
         <div>
@@ -106,7 +114,8 @@ function OrderDetails({ order }: { order: OrderDTO }) {
 
       <div>
         <h3 className="mb-2 text-sm font-semibold">
-          Items · package size {WEIGHT_LABELS[order.packageSize].code} ({WEIGHT_LABELS[order.packageSize].label})
+          Items · package size {WEIGHT_LABELS[order.packageSize].code} (
+          {WEIGHT_LABELS[order.packageSize].label})
         </h3>
         <ul className="divide-y divide-zinc-200 text-sm dark:divide-zinc-800">
           {order.items.map((item) => (
@@ -142,7 +151,10 @@ function OrderDetails({ order }: { order: OrderDTO }) {
         onClose={() => setCancelling(false)}
         onConfirm={() => act.mutate('cancel')}
       >
-        The customer gets an email. {order.payment.status === 'paid' ? 'The order is paid – refund it yourself in your payment dashboard.' : ''}
+        The customer gets an email.{' '}
+        {order.payment.status === 'paid'
+          ? 'The order is paid – refund it yourself in your payment dashboard.'
+          : ''}
       </ConfirmDialog>
     </div>
   );

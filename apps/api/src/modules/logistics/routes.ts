@@ -1,5 +1,9 @@
 import { Router } from 'express';
-import { logisticsOrdersQuerySchema, logisticsStatusSchema, objectIdSchema } from '@cart2heavy/shared';
+import {
+  logisticsOrdersQuerySchema,
+  logisticsStatusSchema,
+  objectIdSchema,
+} from '@cart2heavy/shared';
 import type { AppContext } from '../../context';
 import { currentUser, requireRole } from '../../middleware/auth';
 import { listQueue, moveOrder } from './service';

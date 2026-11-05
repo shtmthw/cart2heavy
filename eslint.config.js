@@ -12,11 +12,6 @@ export default tseslint.config(
       '**/coverage/**',
       'playwright-report/**',
       'test-results/**',
-      // the old JavaScript apps – removed at the end of the refactor
-      'Backend/**',
-      'frontend/**',
-      'admin/**',
-      'logistics/**',
     ],
   },
   js.configs.recommended,

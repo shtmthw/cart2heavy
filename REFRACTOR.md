@@ -1,6 +1,6 @@
 # REFRACTOR.md — cart2heavy → TypeScript
 
-> Status: **IN PROGRESS — implementing on `refactor/typescript`** · Author: Claude (with Matthew) · Date: 2026-11-05
+> Status: **Phases 1–9 DONE on `refactor/typescript` — Phase 10 (publish) pending** · Author: Claude (with Matthew) · Date: 2026-11-05
 >
 > This document is the step-by-step plan for rewriting cart2heavy in TypeScript, making it work
 > better, giving it a minimal UI, dockerizing it, and publishing the image to Docker Hub. Each
@@ -459,11 +459,11 @@ Each phase ends with something that runs. Commits are made per phase on a branch
 - **Done when:** e2e is green and the screenshots look right.
 
 ### Phase 9 — README & cleanup
-- [ ] Delete old `Backend/`, `frontend/`, `admin/`, `logistics/`, `todo.txt`.
-- [ ] New `README.md`: what it is, screenshots, quick start (`docker compose up`), demo accounts,
+- [x] Delete old `Backend/`, `frontend/`, `admin/`, `logistics/`, `todo.txt`.
+- [x] New `README.md`: what it is, screenshots, quick start (`docker compose up`), demo accounts,
       environment variables table, how to turn on Stripe, how to develop locally (`pnpm dev`),
       project structure, scripts, a short architecture note, credits.
-- [ ] Update this file: tick every box and add a "What changed" summary.
+- [x] Update this file: tick every box and add a "What changed" summary.
 
 ### Phase 10 — Publish
 - [ ] `docker buildx … --push` to Docker Hub (`matthew552/cart2heavy:1.0.0` + `:latest`).
@@ -544,3 +544,48 @@ Each phase ends with something that runs. Commits are made per phase on a branch
   cancellation) and removes the stack; any uncaught error or `console.error` fails a test. `pnpm screenshots` writes 14 images to
   `docs/screenshots/`. The e2e run found and fixed two real bugs: the CSP blocked `blob:` images (admin photo preview) and URL filter updates could
   use a stale copy of the query string (now `useQueryParams`, built on the current address).
+- 2026-11-05 — Phase 9 done: the old `Backend/`, `frontend/`, `admin/`, `logistics/` and `todo.txt` are deleted (history keeps them); new `README.md` with
+  screenshots, quick start, demo accounts, configuration, Stripe, development, structure and architecture. Extras found while documenting: a
+  `pnpm create-user` command (also `docker compose exec app node dist/create-user.js …`) so a real deployment can make its own admin without demo
+  data, and `docker-compose.dev.yml` (publishes MongoDB / SMTP for `pnpm dev`).
+
+---
+
+## 11. What changed (summary)
+
+**Rewritten in TypeScript (strict)** as a pnpm monorepo: `packages/shared` (Zod schemas, DTO types, pricing, order-status rules),
+`apps/api` (Express 5, Mongoose 9, Zod, 109 tests), `apps/web` (React 19, Vite 8, React Router 8, TanStack Query, Tailwind 4), `e2e` (19
+Playwright tests + screenshots). One Docker image (`matthew552/cart2heavy`) that serves API and web app; `docker compose up` gives a seeded shop.
+
+**Bugs from §1.2**
+
+| # | Result |
+|---|---|
+| B1 | The product grid and the cart use the right endpoints and are covered by e2e. |
+| B2 | Prices are integer cents everywhere; a test checks the exact `unit_amount` sent to Stripe. |
+| B3 | Prices, delivery, totals and the $25 minimum are computed on the server from the database; tests send forged prices. |
+| B4 | The order is created before payment, the cart is only emptied after the provider confirms; cancel and retry keep it. |
+| B5 | "Most bought" grows by quantity, once, after payment (idempotent mark-paid); no separate unauthenticated call. |
+| B6 | Payment is verified by asking the provider (or its webhook); `?success=true` is ignored; only the owner can verify. |
+| B7 | `createdAt` comes from Mongoose timestamps (per document). |
+| B8 | `totalPages` counts the filtered products. |
+| B9 | Status changes are awaited, atomic and recorded in `statusHistory`. |
+| B10 | The cart is a normal page for guests too. |
+| B11 | Every page has a real URL and loads its own data; reload is covered by e2e. |
+| B12/B13 | One origin, relative URLs, nothing hard-coded. |
+
+**Security from §1.3**
+
+| # | Result |
+|---|---|
+| S1/S2 | Configuration only through environment variables (validated at start-up); `.env` is git-ignored, `.env.example` is committed. **Still your to-do:** change the MongoDB Atlas password and roll the Stripe test key, they remain in the git history. |
+| S3 | Role-based auth (`customer` / `admin` / `logistics`) on the server; tests cover every admin and logistics route for each role. |
+| S4 | Account endpoints only ever act on the logged-in user. |
+| S5 | `httpOnly`, `SameSite=Lax` cookie plus a same-origin check. |
+| S6 | Uploads: MIME + extension + file signature, 5 MB, random names. |
+| S7 | `node_modules` and `.env` are no longer tracked. |
+
+**Deviations from the plan** (all small): `GET /auth/me` answers `{ user: null }` for visitors; `GET /api/config` and `GET /products?ids=`
+were added for the guest cart; product search is a regex, not a text index; logistics endpoints are for the `logistics` role only; the Docker
+image is ~312 MB unpacked (target was 250); the compose ports listen on 127.0.0.1 by default and the session secret is generated when unset;
+`create-user` and `docker-compose.dev.yml` were added.

@@ -405,12 +405,12 @@ Each phase ends with something that runs. Commits are made per phase on a branch
 - **Done when:** builds and both apps import it.
 
 ### Phase 3 — API core
-- [ ] Env config (Zod, fails fast with a clear message), Mongo connection, pino logging, helmet,
+- [x] Env config (Zod, fails fast with a clear message), Mongo connection, pino logging, helmet,
       error handler, 404, `/api/health`.
-- [ ] Mongoose models with TS types + indexes (email unique, category slug, product text index).
-- [ ] Auth: register/login/logout/me, bcryptjs, JWT cookie, `requireAuth`, `requireRole`,
+- [x] Mongoose models with TS types + indexes (email unique, category slug, product text index).
+- [x] Auth: register/login/logout/me, bcryptjs, JWT cookie, `requireAuth`, `requireRole`,
       login/register rate limiting.
-- [ ] Upload middleware (MIME + size), file-cleanup helper.
+- [x] Upload middleware (MIME + size), file-cleanup helper.
 - **Done when:** Vitest + Supertest auth tests pass (register, login, me, wrong password, role guard).
 
 ### Phase 4 — API features
@@ -511,3 +511,7 @@ Each phase ends with something that runs. Commits are made per phase on a branch
   untracked. `pnpm typecheck && pnpm lint && pnpm test` pass.
 - 2026-11-05 — Phase 2 done: `packages/shared` has the enums/labels, money helpers (integer cents), order-status rules, Zod schemas and
   wire DTO types; 15 unit tests. Small additions to the API list: `GET /api/config` (shop rules for the guest cart) and `GET /products?ids=` (to render a guest cart).
+- 2026-11-05 — Phase 3 done: Zod-validated env (`loadConfig`), pino/helmet/error handler, Mongoose models, auth (register/login/logout/me), `/api/me` account
+  endpoints (name, avatar, password), cookie JWT, role guards, same-origin check, rate-limited login, hardened image upload (type + signature + 5 MB +
+  random names). 28 Vitest/Supertest tests on an in-memory MongoDB. Product search uses an escaped case-insensitive regex instead of a Mongo text index
+  (partial words like "mpg" must match for the instant dropdown), so no text index is created.

@@ -42,6 +42,16 @@ export default tseslint.config(
     },
   },
   {
+    // HTTP response bodies in tests are untyped (`any`) by nature
+    files: ['**/test/**/*.ts', 'e2e/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+    },
+  },
+  {
     files: ['apps/web/**/*.{ts,tsx}'],
     extends: [reactHooks.configs.flat.recommended],
     languageOptions: { globals: globals.browser },

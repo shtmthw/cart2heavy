@@ -19,6 +19,7 @@ const envSchema = z.object({
   MONGODB_URI: z.string().min(1, 'is required, e.g. mongodb://127.0.0.1:27017/cart2heavy'),
   JWT_SECRET: z.string().min(16, 'must be at least 16 characters (use a long random string)'),
   UPLOAD_DIR: z.string().default('./uploads'),
+  SEED_IMAGES_DIR: z.string().default('./src/seed/images'),
   WEB_DIST: optionalString,
   DELIVERY_FEE_CENTS: z.coerce.number().int().min(0).default(180),
   MIN_ORDER_CENTS: z.coerce.number().int().min(0).default(2500),
@@ -43,6 +44,8 @@ export interface AppConfig {
   jwtSecret: string;
   /** absolute path */
   uploadDir: string;
+  /** absolute path of the demo product photos used by the seed */
+  seedImagesDir: string;
   /** absolute path of the built web app; when set the API serves it */
   webDist: string | undefined;
   deliveryCents: number;
@@ -95,6 +98,7 @@ export function loadConfig(source: Record<string, string | undefined> = process.
     mongoUri: env.MONGODB_URI,
     jwtSecret: env.JWT_SECRET,
     uploadDir: path.resolve(env.UPLOAD_DIR),
+    seedImagesDir: path.resolve(env.SEED_IMAGES_DIR),
     webDist: env.WEB_DIST ? path.resolve(env.WEB_DIST) : undefined,
     deliveryCents: env.DELIVERY_FEE_CENTS,
     minOrderCents: env.MIN_ORDER_CENTS,

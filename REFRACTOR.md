@@ -414,15 +414,15 @@ Each phase ends with something that runs. Commits are made per phase on a branch
 - **Done when:** Vitest + Supertest auth tests pass (register, login, me, wrong password, role guard).
 
 ### Phase 4 — API features
-- [ ] Products: list (filter / search / sort / paginate), detail, suggest, admin create/edit/delete.
-- [ ] Categories: list with counts, admin CRUD with "in use" protection.
-- [ ] Cart: get, set quantity, remove, merge guest cart.
-- [ ] Orders & payments: checkout (server-side pricing, $25 min, delivery fee), `PaymentProvider`
+- [x] Products: list (filter / search / sort / paginate), detail, suggest, admin create/edit/delete.
+- [x] Categories: list with counts, admin CRUD with "in use" protection.
+- [x] Cart: get, set quantity, remove, merge guest cart.
+- [x] Orders & payments: checkout (server-side pricing, $25 min, delivery fee), `PaymentProvider`
       (mock + stripe), verify (idempotent), retry pay, Stripe webhook, my orders.
-- [ ] Admin: orders list/filter, confirm (paid only), cancel, stats.
-- [ ] Logistics: queue, step forward with `statusHistory`.
-- [ ] Mail: order received / confirmed / shipped / delivered emails (plain + simple HTML).
-- [ ] Seed script (`pnpm seed`, plus `SEED_ON_START`) + compressed seed images.
+- [x] Admin: orders list/filter, confirm (paid only), cancel, stats.
+- [x] Logistics: queue, step forward with `statusHistory`.
+- [x] Mail: order received / confirmed / shipped / delivered emails (plain + simple HTML).
+- [x] Seed script (`pnpm seed`, plus `SEED_ON_START`) + compressed seed images.
 - **Done when:** tests for pricing rules, the cart, checkout→verify (mock), role permissions, and
       status steps all pass.
 
@@ -515,3 +515,10 @@ Each phase ends with something that runs. Commits are made per phase on a branch
   endpoints (name, avatar, password), cookie JWT, role guards, same-origin check, rate-limited login, hardened image upload (type + signature + 5 MB +
   random names). 28 Vitest/Supertest tests on an in-memory MongoDB. Product search uses an escaped case-insensitive regex instead of a Mongo text index
   (partial words like "mpg" must match for the instant dropdown), so no text index is created.
+- 2026-11-05 — Phase 4 done: products (list/filter/search/sort/paginate, detail, suggest, admin create/edit/delete with hide-if-ordered), categories
+  (counts, admin CRUD, in-use protection), server-side cart (+ guest merge), checkout with server-side pricing and the $25 minimum, `PaymentGateway`
+  (`mock` with its own "test payment" endpoints, `stripe` in cents + webhook), idempotent verify/mark-paid, retry payment, admin orders/confirm/cancel/stats,
+  logistics queue with forward-only steps and status history, emails (received / confirmed / shipped / delivered / cancelled), seed (`pnpm seed`,
+  `SEED_ON_START`) with 8 compressed photos (48 MB -> 0.6 MB). 102 tests. Notes: the minimum order applies to the items (subtotal), not to the delivery
+  fee; logistics endpoints are for the `logistics` role only (admins use their own screens); cancelling a paid order lowers the "most bought" counter
+  but does not refund (no refund automation).

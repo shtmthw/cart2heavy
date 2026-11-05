@@ -8,10 +8,24 @@ import { pinoHttp } from 'pino-http';
 import type { AppConfig } from './config/env';
 import type { AppContext } from './context';
 import { createLogger, type Logger } from './logger';
+import { createMailer, type Mailer } from './mail/mailer';
+import {
+  createPaymentGateway,
+  createStripeClient,
+  type PaymentGateway,
+  type StripeClient,
+} from './payments';
 import { authenticate } from './middleware/auth';
 import { errorHandler, notFound, send } from './middleware/errorHandler';
 import { sameOrigin } from './middleware/sameOrigin';
+import { adminRoutes } from './modules/admin/routes';
 import { authRoutes } from './modules/auth/routes';
+import { cartRoutes } from './modules/cart/routes';
+import { categoryRoutes } from './modules/categories/routes';
+import { logisticsRoutes } from './modules/logistics/routes';
+import { orderRoutes } from './modules/orders/routes';
+import { mockPaymentRoutes, stripeWebhook } from './modules/payments/routes';
+import { productRoutes } from './modules/products/routes';
 import { systemRoutes } from './modules/system/routes';
 import { userRoutes } from './modules/users/routes';
 
@@ -19,11 +33,22 @@ export interface CreateAppOptions {
   logger?: Logger;
   /** turn the login/register rate limit off (tests) */
   rateLimit?: boolean;
+  /** replace the email sender / payment company / Stripe SDK (tests) */
+  mailer?: Mailer;
+  payments?: PaymentGateway;
+  stripe?: StripeClient;
 }
 
 export function createApp(config: AppConfig, options: CreateAppOptions = {}): Express {
   const logger = options.logger ?? createLogger(config);
-  const ctx: AppContext = { config, logger };
+  const stripe = options.stripe ?? createStripeClient(config);
+  const ctx: AppContext = {
+    config,
+    logger,
+    stripe,
+    mailer: options.mailer ?? createMailer(config, logger),
+    payments: options.payments ?? createPaymentGateway(config, stripe),
+  };
 
   const app = express();
   app.disable('x-powered-by');
@@ -71,6 +96,8 @@ export function createApp(config: AppConfig, options: CreateAppOptions = {}): Ex
 
   /* ---------- JSON API ---------- */
   const api = Router();
+  // Stripe's webhook needs the raw body to verify the signature, so it comes before the JSON parser
+  api.post('/payments/stripe/webhook', ...stripeWebhook(ctx));
   api.use(express.json({ limit: '100kb' }));
   api.use(cookieParser());
   api.use(sameOrigin);
@@ -91,6 +118,13 @@ export function createApp(config: AppConfig, options: CreateAppOptions = {}): Ex
   api.use(systemRoutes(ctx));
   api.use('/auth', authRoutes(ctx, authLimiter));
   api.use('/me', userRoutes(ctx));
+  api.use('/categories', categoryRoutes());
+  api.use('/products', productRoutes());
+  api.use('/cart', cartRoutes(ctx));
+  api.use('/orders', orderRoutes(ctx));
+  api.use('/payments/mock', mockPaymentRoutes(ctx));
+  api.use('/admin', adminRoutes(ctx));
+  api.use('/logistics', logisticsRoutes(ctx));
   api.use(notFound);
   app.use('/api', api);
 

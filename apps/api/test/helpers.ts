@@ -10,7 +10,10 @@ import type { Role } from '@cart2heavy/shared';
 import { createApp, type CreateAppOptions } from '../src/app';
 import { loadConfig, type AppConfig } from '../src/config/env';
 import { connectDb } from '../src/db';
-import { User } from '../src/models';
+import type { Weight } from '@cart2heavy/shared';
+import { slugify } from '@cart2heavy/shared';
+import type { MailMessage, Mailer } from '../src/mail/mailer';
+import { Category, Product, User } from '../src/models';
 
 export const PASSWORD = 'password123';
 
@@ -54,6 +57,12 @@ export function useTestApp(
   beforeEach(async () => {
     const collections = await mongoose.connection.db!.collections();
     await Promise.all(collections.map((c) => c.deleteMany({})));
+    // empty (but keep) the upload folders: multer only creates them once, at start-up
+    for (const kind of ['products', 'avatars']) {
+      const dir = path.join(uploadDir, kind);
+      if (!fs.existsSync(dir)) continue;
+      for (const file of fs.readdirSync(dir)) fs.rmSync(path.join(dir, file), { force: true });
+    }
   });
 
   afterAll(async () => {
@@ -100,4 +109,78 @@ export async function loginAs(ctx: TestContext, role: Role = 'customer') {
     .map((c) => c.split(';')[0])
     .join('; ');
   return { agent, user, cookie };
+}
+
+export const ADDRESS = {
+  fullName: 'Test Customer',
+  line1: '1 Test Street',
+  city: 'Springfield',
+  postalCode: '12345',
+  country: 'United States',
+  phone: '+1 555 0100',
+};
+
+/** An email sender that remembers what it was asked to send. */
+export function captureMailer(): Mailer & { sent: MailMessage[] } {
+  const sent: MailMessage[] = [];
+  return {
+    sent,
+    send(message) {
+      sent.push(message);
+      return Promise.resolve();
+    },
+  };
+}
+
+let seq = 0;
+export async function makeCategory(name = `Category ${++seq}`, weight: Weight = 'small') {
+  return Category.create({ name, slug: slugify(name), weight });
+}
+
+export async function makeProduct(
+  overrides: Partial<{
+    name: string;
+    priceCents: number;
+    isActive: boolean;
+    totalBought: number;
+    description: string;
+    category: Awaited<ReturnType<typeof makeCategory>>;
+  }> = {},
+) {
+  const category = overrides.category ?? (await makeCategory());
+  return Product.create({
+    name: overrides.name ?? `Product ${++seq}`,
+    description: overrides.description ?? 'A test product',
+    priceCents: overrides.priceCents ?? 5000,
+    image: 'test.jpg',
+    category: category._id,
+    isActive: overrides.isActive ?? true,
+    totalBought: overrides.totalBought ?? 0,
+  });
+}
+
+/** Puts products in the logged in agent's cart through the API. */
+export async function fillCart(
+  agent: ReturnType<typeof request.agent>,
+  lines: [{ id: string }, number][],
+) {
+  for (const [product, quantity] of lines) {
+    const res = await agent.put(`/api/cart/items/${product.id}`).send({ quantity });
+    if (res.status !== 200)
+      throw new Error(`could not fill cart: ${res.status} ${JSON.stringify(res.body)}`);
+  }
+}
+
+/** Cart -> checkout -> pretend to pay on the mock page -> come back and verify. */
+export async function placePaidOrder(
+  agent: ReturnType<typeof request.agent>,
+  lines: [{ id: string }, number][],
+) {
+  await fillCart(agent, lines);
+  const started = await agent.post('/api/orders/checkout').send({ address: ADDRESS });
+  if (started.status !== 201) throw new Error(`checkout failed: ${JSON.stringify(started.body)}`);
+  const orderId = started.body.orderId as string;
+  await agent.post(`/api/payments/mock/${orderId}/pay`).expect(200);
+  const verified = await agent.post(`/api/orders/${orderId}/verify`).expect(200);
+  return { orderId, order: verified.body };
 }

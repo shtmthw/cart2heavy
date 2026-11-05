@@ -1,20 +1,9 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import { createApp } from './app';
+import { loadDotEnv } from './config/dotenv';
 import { ConfigError, DEV_JWT_SECRET, loadConfig } from './config/env';
 import { connectDb, disconnectDb } from './db';
 import { createLogger } from './logger';
-
-/** Loads `.env` from the current folder or the repository root (Node's built-in loader). */
-function loadDotEnv() {
-  for (const dir of [process.cwd(), path.resolve(process.cwd(), '../..')]) {
-    const file = path.join(dir, '.env');
-    if (fs.existsSync(file)) {
-      process.loadEnvFile(file); // does not override variables that are already set
-      return;
-    }
-  }
-}
+import { seedDatabase } from './seed/seed';
 
 async function main() {
   loadDotEnv();
@@ -27,6 +16,16 @@ async function main() {
 
   await connectDb(config.mongoUri);
   logger.info('connected to MongoDB');
+
+  if (config.seedOnStart && (await seedDatabase({ config, logger }))) {
+    logger.info('the database was empty, demo data was added (SEED_ON_START=true)');
+  }
+
+  if (config.payment.provider === 'mock' && config.isProduction) {
+    logger.warn(
+      'PAYMENT_PROVIDER=mock: payments are simulated. Set STRIPE_SECRET_KEY to take real payments.',
+    );
+  }
 
   const app = createApp(config, { logger });
   const server = app.listen(config.port, () => {

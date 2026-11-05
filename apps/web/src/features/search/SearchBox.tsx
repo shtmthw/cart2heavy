@@ -65,7 +65,7 @@ export function SearchBox({ className }: { className?: string }) {
   return (
     <div ref={rootRef} className={cn('relative', className)} role="search">
       <Search
-        className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-zinc-400"
+        className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-zinc-500"
         aria-hidden
       />
       <input
@@ -86,7 +86,7 @@ export function SearchBox({ className }: { className?: string }) {
         }}
         onFocus={() => setOpen(true)}
         onKeyDown={onKeyDown}
-        className="h-11 w-full rounded-full border border-zinc-200 bg-white pr-4 pl-10 text-base shadow-sm sm:text-sm transition-all placeholder:text-zinc-400 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/15 dark:border-zinc-700 dark:bg-zinc-900"
+        className="h-10 w-full rounded-full border border-zinc-800 bg-zinc-900 pr-4 pl-10 text-base sm:text-sm transition-all placeholder:text-zinc-500 hover:border-zinc-700 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/15"
       />
       <ul
         id={listId}

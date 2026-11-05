@@ -1,15 +1,12 @@
 import { createProducts, expect, test } from '../support';
 
 test.describe('storefront', () => {
-  test('home shows the shop, most bought, categories and sorting', async ({ page }) => {
+  test('home shows the shop, categories and sorting', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('heading', { level: 1 })).toContainText(
       'Everything for your build',
     );
-    await expect(page.getByRole('heading', { name: 'Most bought' })).toBeVisible();
-    await expect(
-      page.getByRole('list').filter({ hasText: 'bought' }).getByRole('listitem'),
-    ).toHaveCount(3);
+    await expect(page.getByRole('heading', { name: 'Most bought' })).toHaveCount(0);
 
     // category chips filter the grid and are kept in the URL
     await page.getByRole('button', { name: 'Laptops' }).click();
@@ -25,7 +22,8 @@ test.describe('storefront', () => {
     // sorting by price, low to high
     await page.getByRole('button', { name: 'All', exact: true }).click();
     await expect(page).not.toHaveURL(/category=/);
-    await page.getByLabel('Sort products').selectOption('price_asc');
+    await page.getByRole('button', { name: /^Sort products/ }).click();
+    await page.getByRole('option', { name: 'Price: low to high' }).click();
     await expect(page).toHaveURL(/sort=price_asc/);
     await expect(page.getByRole('heading', { level: 3 }).first()).toContainText(
       'ASUS ROG Strix B450-F',

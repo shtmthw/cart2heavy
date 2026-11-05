@@ -2,7 +2,7 @@ import { loadDotEnv } from '../config/dotenv';
 import { ConfigError, loadConfig } from '../config/env';
 import { connectDb, disconnectDb } from '../db';
 import { createLogger } from '../logger';
-import { DEMO_PASSWORDS } from './data';
+import { DEMO_PASSWORDS, OWNER_ACCOUNT } from './data';
 import { seedDatabase } from './seed';
 
 /** `pnpm seed` fills an empty database; `pnpm seed -- --reset` wipes it first. */
@@ -22,7 +22,7 @@ async function main() {
       return;
     }
     console.log('\nDemo accounts:');
-    for (const account of Object.values(DEMO_PASSWORDS)) {
+    for (const account of [...Object.values(DEMO_PASSWORDS), OWNER_ACCOUNT]) {
       console.log(`  ${account.email.padEnd(28)} ${account.password}`);
     }
   } finally {

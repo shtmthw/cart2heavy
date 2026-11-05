@@ -10,22 +10,20 @@ export function ProductCard({ product, index = 0 }: { product: ProductDTO; index
   return (
     <Card
       style={{ animationDelay: `${Math.min(index, 11) * 45}ms` }}
-      className="animate-fade-up flex flex-col overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
+      className="animate-fade-up flex flex-col overflow-hidden transition-colors duration-200 hover:border-zinc-700"
     >
       <Link to={`/products/${product.id}`} className="group block">
-        <div className="aspect-[3/2] overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+        <div className="aspect-[3/2] overflow-hidden bg-zinc-800">
           <img
             src={product.imageUrl}
             alt=""
             loading="lazy"
-            className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+            className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
           />
         </div>
         <div className="space-y-0.5 p-3 pb-2">
-          {product.category && (
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">{product.category.name}</p>
-          )}
-          <h3 className="line-clamp-2 min-h-10 text-sm leading-5 font-medium text-zinc-900 dark:text-zinc-100">
+          {product.category && <p className="text-xs text-zinc-500">{product.category.name}</p>}
+          <h3 className="line-clamp-2 min-h-10 text-sm leading-5 font-medium text-zinc-100">
             {product.name}
           </h3>
         </div>

@@ -278,7 +278,7 @@ export function ProductsPage() {
             setSearch(e.target.value);
             setPage(1);
           }}
-          className="h-11 w-full rounded-full border border-zinc-200 bg-white pr-4 pl-10 text-base shadow-sm focus-visible:border-accent focus-visible:ring-4 focus-visible:ring-accent/15 focus-visible:outline-none sm:h-10 sm:text-sm dark:border-zinc-700 dark:bg-zinc-900"
+          className="h-11 w-full rounded-full border border-zinc-800 bg-zinc-900 pr-4 pl-10 text-base hover:border-zinc-700 focus-visible:border-accent focus-visible:ring-4 focus-visible:ring-accent/15 focus-visible:outline-none sm:h-10 sm:text-sm"
         />
       </div>
 

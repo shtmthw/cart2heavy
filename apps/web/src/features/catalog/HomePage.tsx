@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { PRODUCT_SORTS, type ProductSort } from '@cart2heavy/shared';
-import { CompactSelect } from '../../components/ui/field';
+import { ArrowUpDown } from 'lucide-react';
+import { Dropdown } from '../../components/ui/dropdown';
 import { Container } from '../../components/ui/page';
 import { Pagination } from '../../components/ui/pagination';
 import { useDocumentTitle } from '../../lib/hooks';
 import { categoriesQuery, productsQuery } from '../../lib/queries';
 import { useQueryParams } from '../../lib/useQueryParams';
 import { cn } from '../../lib/utils';
-import { MostBought } from './MostBought';
 import { NoProducts, ProductGrid } from './ProductGrid';
 
 export const SORT_LABELS: Record<ProductSort, string> = {
@@ -16,6 +16,8 @@ export const SORT_LABELS: Record<ProductSort, string> = {
   price_asc: 'Price: low to high',
   price_desc: 'Price: high to low',
 };
+
+export const SORT_OPTIONS = PRODUCT_SORTS.map((s) => ({ value: s, label: SORT_LABELS[s] }));
 
 export function parseSort(value: string | null): ProductSort {
   return PRODUCT_SORTS.find((s) => s === value) ?? 'newest';
@@ -41,10 +43,10 @@ function Chip({
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        'shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-150',
+        'shrink-0 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all duration-150',
         active
-          ? 'border-accent bg-accent text-ink shadow-sm'
-          : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800',
+          ? 'border-accent bg-accent text-ink'
+          : 'border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-100',
       )}
     >
       {children}
@@ -64,16 +66,14 @@ export function HomePage() {
 
   return (
     <Container>
-      <section className="mb-10 max-w-3xl pt-2 sm:pt-6">
-        <h1 className="text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl">
+      <section className="mb-8 max-w-2xl sm:mb-10 sm:pt-4">
+        <h1 className="text-2xl leading-tight font-semibold tracking-tight text-balance sm:text-4xl">
           Everything for your build, delivered heavy.
         </h1>
-        <p className="mt-3 text-base text-zinc-600 sm:text-lg dark:text-zinc-400">
+        <p className="mt-2 text-sm text-zinc-400 sm:text-base">
           Motherboards, laptops, phones and desktops – ordered in a minute, tracked to your door.
         </p>
       </section>
-
-      {!category && page === 1 && <MostBought />}
 
       <section aria-label="Products">
         <div className="mb-5 flex flex-wrap items-center justify-between gap-x-3 gap-y-3">
@@ -100,23 +100,16 @@ export function HomePage() {
                 </Chip>
               ))}
           </div>
-          <CompactSelect
+          <Dropdown
             label="Sort products"
             prefix="Sort"
+            icon={ArrowUpDown}
             value={sort}
-            onChange={(event) =>
-              update({
-                sort: event.target.value === 'newest' ? undefined : event.target.value,
-                page: undefined,
-              })
+            options={SORT_OPTIONS}
+            onChange={(next) =>
+              update({ sort: next === 'newest' ? undefined : next, page: undefined })
             }
-          >
-            {PRODUCT_SORTS.map((s) => (
-              <option key={s} value={s}>
-                {SORT_LABELS[s]}
-              </option>
-            ))}
-          </CompactSelect>
+          />
         </div>
 
         <ProductGrid

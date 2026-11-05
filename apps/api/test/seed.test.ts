@@ -4,7 +4,7 @@ import request from 'supertest';
 import { describe, expect, it } from 'vitest';
 import { Category, Order, Product, User } from '../src/models';
 import { createLogger } from '../src/logger';
-import { DEMO_PASSWORDS, SEED_ORDERS, SEED_PRODUCTS } from '../src/seed/data';
+import { DEMO_PASSWORDS, OWNER_ACCOUNT, SEED_ORDERS, SEED_PRODUCTS } from '../src/seed/data';
 import { seedDatabase } from '../src/seed/seed';
 import { createUser, useTestApp } from './helpers';
 
@@ -18,7 +18,7 @@ describe('seed', () => {
     expect(await Category.countDocuments()).toBe(4);
     expect(await Product.countDocuments()).toBe(SEED_PRODUCTS.length);
     expect(await Order.countDocuments()).toBe(SEED_ORDERS.length);
-    expect(await User.countDocuments()).toBe(3);
+    expect(await User.countDocuments()).toBe(4);
 
     // photos were copied into the uploads folder and are served
     const product = (await request(ctx.app).get('/api/products?limit=50')).body.items[0];
@@ -28,6 +28,9 @@ describe('seed', () => {
     for (const file of new Set(SEED_PRODUCTS.map((p) => p.image))) {
       expect(fs.existsSync(path.join(ctx.config.uploadDir, 'products', file)), file).toBe(true);
     }
+    // a demo photo missing from the uploads folder (empty or old volume) is still served
+    fs.rmSync(path.join(ctx.config.uploadDir, 'products', SEED_PRODUCTS[0]!.image));
+    await request(ctx.app).get(`/uploads/products/${SEED_PRODUCTS[0]!.image}`).expect(200);
 
     // the three demo accounts can log in with the documented passwords
     for (const [key, role] of [
@@ -42,6 +45,12 @@ describe('seed', () => {
       expect(res.status, account.email).toBe(200);
       expect(res.body.role).toBe(role);
     }
+    // the owner's account is an admin (admins can also use the logistics panel)
+    const owner = await request(ctx.app)
+      .post('/api/auth/login')
+      .send({ email: OWNER_ACCOUNT.email, password: OWNER_ACCOUNT.password });
+    expect(owner.status).toBe(200);
+    expect(owner.body.role).toBe('admin');
   });
 
   it('has orders at several stages and a "most bought" ranking', async () => {

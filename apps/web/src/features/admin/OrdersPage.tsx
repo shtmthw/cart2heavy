@@ -15,7 +15,7 @@ import { Button } from '../../components/ui/button';
 import { ConfirmDialog } from '../../components/ui/confirm-dialog';
 import { Dialog } from '../../components/ui/dialog';
 import { EmptyState, ErrorState } from '../../components/ui/empty-state';
-import { CompactSelect } from '../../components/ui/field';
+import { Dropdown } from '../../components/ui/dropdown';
 import { Container, PageHeader } from '../../components/ui/page';
 import { Pagination } from '../../components/ui/pagination';
 import { Skeleton } from '../../components/ui/skeleton';
@@ -177,28 +177,28 @@ export function OrdersPage() {
         title="Orders"
         actions={
           <div className="flex flex-wrap gap-2">
-            <CompactSelect
+            <Dropdown
               label="Filter by status"
               value={status ?? ''}
-              onChange={(e) => update({ status: e.target.value, page: undefined })}
-            >
-              <option value="">All statuses</option>
-              {ORDER_STATUSES.map((s) => (
-                <option key={s} value={s}>
-                  {ORDER_STATUS_LABELS[s].label}
-                </option>
-              ))}
-            </CompactSelect>
-            <CompactSelect
+              options={[
+                { value: '', label: 'All statuses' },
+                ...ORDER_STATUSES.map((s) => ({ value: s, label: ORDER_STATUS_LABELS[s].label })),
+              ]}
+              onChange={(next) => update({ status: next, page: undefined })}
+              align="start"
+            />
+            <Dropdown
               label="Filter by payment"
               value={payment ?? ''}
-              onChange={(e) => update({ payment: e.target.value, page: undefined })}
-            >
-              <option value="">Any payment</option>
-              <option value="paid">Paid</option>
-              <option value="pending">Awaiting payment</option>
-              <option value="failed">Payment failed</option>
-            </CompactSelect>
+              options={[
+                { value: '', label: 'Any payment' },
+                { value: 'paid', label: 'Paid' },
+                { value: 'pending', label: 'Awaiting payment' },
+                { value: 'failed', label: 'Payment failed' },
+              ]}
+              onChange={(next) => update({ payment: next, page: undefined })}
+              align="start"
+            />
           </div>
         }
       />

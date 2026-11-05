@@ -16,7 +16,7 @@ async function expectNoSideScroll(page: Page, where: string) {
 test.describe('on a phone', () => {
   test('the storefront fits the screen and the main actions stay in reach', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByRole('heading', { name: 'Most bought' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 3 }).first()).toBeVisible();
     await expectNoSideScroll(page, 'home');
 
     // the category chips scroll sideways inside their own row, the page itself does not

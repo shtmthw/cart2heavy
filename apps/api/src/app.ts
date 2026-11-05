@@ -94,6 +94,12 @@ export function createApp(config: AppConfig, options: CreateAppOptions = {}): Ex
       immutable: true,
     }),
   );
+  // the demo photos ship with the app: if the uploads folder lacks one (an empty or old volume,
+  // a different working folder), it is served from there instead of turning into a broken image
+  app.use(
+    '/uploads/products',
+    express.static(config.seedImagesDir, { index: false, dotfiles: 'ignore', maxAge: '30d' }),
+  );
 
   /* ---------- JSON API ---------- */
   const api = Router();

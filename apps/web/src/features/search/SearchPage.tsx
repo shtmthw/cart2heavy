@@ -1,14 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { SearchX } from 'lucide-react';
-import { PRODUCT_SORTS } from '@cart2heavy/shared';
+import { ArrowUpDown, SearchX } from 'lucide-react';
 import { EmptyState } from '../../components/ui/empty-state';
-import { CompactSelect } from '../../components/ui/field';
+import { Dropdown } from '../../components/ui/dropdown';
 import { Container, PageHeader } from '../../components/ui/page';
 import { Pagination } from '../../components/ui/pagination';
 import { useDocumentTitle } from '../../lib/hooks';
 import { productsQuery } from '../../lib/queries';
 import { useQueryParams } from '../../lib/useQueryParams';
-import { parsePage, parseSort, SORT_LABELS } from '../catalog/HomePage';
+import { parsePage, parseSort, SORT_OPTIONS } from '../catalog/HomePage';
 import { ProductGrid } from '../catalog/ProductGrid';
 
 export function SearchPage() {
@@ -40,23 +39,16 @@ export function SearchPage() {
             : undefined
         }
         actions={
-          <CompactSelect
+          <Dropdown
             label="Sort results"
             prefix="Sort"
+            icon={ArrowUpDown}
             value={sort}
-            onChange={(event) =>
-              update({
-                sort: event.target.value === 'newest' ? undefined : event.target.value,
-                page: undefined,
-              })
+            options={SORT_OPTIONS}
+            onChange={(next) =>
+              update({ sort: next === 'newest' ? undefined : next, page: undefined })
             }
-          >
-            {PRODUCT_SORTS.map((s) => (
-              <option key={s} value={s}>
-                {SORT_LABELS[s]}
-              </option>
-            ))}
-          </CompactSelect>
+          />
         }
       />
       <ProductGrid

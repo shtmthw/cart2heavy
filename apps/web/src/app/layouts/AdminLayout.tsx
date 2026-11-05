@@ -5,9 +5,7 @@ import { AccountMenu } from './AccountMenu';
 const link = ({ isActive }: { isActive: boolean }) =>
   cn(
     'flex-1 rounded-full px-2 py-2 text-center text-sm font-medium whitespace-nowrap transition-colors sm:flex-none sm:px-3.5 sm:py-1.5',
-    isActive
-      ? 'bg-accent-soft text-accent'
-      : 'text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800',
+    isActive ? 'bg-accent-soft text-accent' : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100',
   );
 
 /** Shared frame of the staff areas (admin and logistics): title, tabs, link back to the shop. */
@@ -21,14 +19,14 @@ export function StaffLayout({
   const { pathname } = useLocation();
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="sticky top-0 z-20 border-b border-zinc-200/70 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
-        <div className="px-4 py-3 sm:px-8">
+      <header className="sticky top-0 z-20 border-b border-zinc-800/80 bg-zinc-950/85 backdrop-blur-md">
+        <div className="mx-auto max-w-6xl px-4 py-2.5 sm:py-3">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <NavLink to="/" className="font-logo text-3xl font-bold tracking-tight">
+              <NavLink to="/" className="font-logo text-xl font-bold tracking-tight sm:text-2xl">
                 cart<span className="text-accent">2</span>heavy
               </NavLink>
-              <span className="rounded bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+              <span className="rounded-full border border-zinc-800 px-2 py-0.5 text-xs font-medium text-zinc-400">
                 {title}
               </span>
             </div>
@@ -43,7 +41,10 @@ export function StaffLayout({
             </div>
           </div>
           {links.length > 1 && (
-            <nav aria-label={`${title} sections`} className="-mx-1 mt-3 flex gap-1 overflow-x-auto">
+            <nav
+              aria-label={`${title} sections`}
+              className="no-scrollbar -mx-1 mt-2.5 flex gap-1 overflow-x-auto"
+            >
               {links.map((item) => (
                 <NavLink key={item.to} to={item.to} end={item.end ?? false} className={link}>
                   {item.label}

@@ -69,7 +69,8 @@ test('an order goes from processing to delivered, and the customer sees each ste
   }
   // finished orders leave the default queue
   await expect(logistics.getByText(orderNumber, { exact: true })).toBeHidden();
-  await logistics.getByLabel('Filter by status').selectOption('delivered');
+  await logistics.getByRole('button', { name: /^Filter by status/ }).click();
+  await logistics.getByRole('option', { name: 'Delivered' }).click();
   await expect(logistics.getByText(orderNumber, { exact: true })).toBeVisible();
 
   // --- back to the customer: every step is on the timeline

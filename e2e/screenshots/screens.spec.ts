@@ -41,7 +41,7 @@ test('storefront', async ({ page, context }) => {
   await hideToasts(context);
 
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Most bought' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 3 }).first()).toBeVisible();
   await settle(page);
   await page.screenshot({ path: shot('home') });
 
@@ -144,7 +144,7 @@ test('phone: storefront, admin and logistics', async ({ browser }) => {
 
   // storefront
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Most bought' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 3 }).first()).toBeVisible();
   await settle(page);
   await page.screenshot({ path: shot('mobile-home') });
   await page

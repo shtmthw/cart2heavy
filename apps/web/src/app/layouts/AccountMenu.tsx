@@ -12,7 +12,7 @@ function MenuLink({ to, icon, children }: { to: string; icon: ReactNode; childre
     <Link
       to={to}
       role="menuitem"
-      className="flex items-center gap-2 px-3 py-3 text-sm hover:bg-zinc-100 sm:py-2 dark:hover:bg-zinc-800"
+      className="flex items-center gap-2 px-3 py-3 text-sm hover:bg-zinc-800/60 sm:py-2"
     >
       {icon}
       {children}
@@ -64,7 +64,7 @@ export function AccountMenu() {
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="flex h-9 items-center gap-2 rounded-md px-1.5 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        className="flex h-9 items-center gap-2 rounded-full pr-1.5 pl-0.5 hover:bg-zinc-900"
       >
         <Avatar name={user.name} src={user.avatarUrl} />
         <span className="hidden max-w-28 truncate text-sm sm:block">{user.name}</span>
@@ -75,7 +75,7 @@ export function AccountMenu() {
         <div
           role="menu"
           onClick={() => setOpen(false)}
-          className="animate-pop absolute right-0 z-30 mt-2 w-56 origin-top-right overflow-hidden rounded-xl border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
+          className="animate-pop absolute right-0 z-30 mt-2 w-56 origin-top-right overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 py-1 shadow-xl shadow-black/30"
         >
           <div className="border-b border-zinc-200 px-3 py-2 dark:border-zinc-800">
             <p className="truncate text-sm font-medium">{user.name}</p>
@@ -103,7 +103,7 @@ export function AccountMenu() {
             onClick={() =>
               logout.mutate(undefined, { onError: (e) => toast.error(errorMessage(e)) })
             }
-            className="flex w-full items-center gap-2 px-3 py-3 text-left text-sm hover:bg-zinc-100 sm:py-2 dark:hover:bg-zinc-800"
+            className="flex w-full items-center gap-2 px-3 py-3 text-left text-sm hover:bg-zinc-800/60 sm:py-2"
           >
             <LogOut className={icon} aria-hidden />
             Log out

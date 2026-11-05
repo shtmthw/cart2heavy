@@ -105,7 +105,8 @@ test.describe('admin catalog', () => {
     await expect(page.getByRole('heading', { name: 'Most bought' })).toBeVisible();
 
     await page.goto('/admin/orders');
-    await page.getByLabel('Filter by status').selectOption('delivered');
+    await page.getByRole('button', { name: /^Filter by status/ }).click();
+    await page.getByRole('option', { name: 'Delivered' }).click();
     await expect(page).toHaveURL(/status=delivered/);
     // only delivered orders are left in the list (the list refreshes, so wait for it)
     await expect(page.getByRole('row').filter({ hasText: 'Delivered' }).first()).toBeVisible();
@@ -114,7 +115,8 @@ test.describe('admin catalog', () => {
         .getByRole('row')
         .filter({ hasText: /Processing|Confirmed|Cancelled|Shipped|Being shipped/ }),
     ).toHaveCount(0);
-    await page.getByLabel('Filter by payment').selectOption('pending');
+    await page.getByRole('button', { name: /^Filter by payment/ }).click();
+    await page.getByRole('option', { name: 'Awaiting payment' }).click();
     await expect(page.getByText('No orders match these filters')).toBeVisible();
   });
 });

@@ -2,28 +2,28 @@
 @import '@fontsource-variable/plus-jakarta-sans';
 @import 'tailwindcss';
 
-/* The whole site is one dark theme: slate #1C1E27 for the page, a lighter slate for cards, lavender accent. */
+/* One dark theme: deep blue-slate surfaces, a soft lavender accent, nothing else. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   /* one accent colour: change it here and the whole app follows */
-  --color-accent: #d0bdf4;
-  --color-accent-hover: #e1d5f9;
-  --color-accent-soft: rgb(208 189 244 / 0.16);
-  --color-ink: #2a2c3b; /* text on top of the accent colour */
+  --color-accent: #c4b5fd;
+  --color-accent-hover: #d6cbfe;
+  --color-accent-soft: rgb(196 181 253 / 0.12);
+  --color-ink: #17132a; /* text on top of the accent colour */
 
   /* "zinc" is remapped to the palette: 950 = page, 900 = cards, 800 = lines, 100-500 = text */
-  --color-zinc-50: #f3f5fb;
-  --color-zinc-100: #e5eaf5;
-  --color-zinc-200: #d9dfee;
-  --color-zinc-300: #c6cde1;
-  --color-zinc-400: #b6bed6;
-  --color-zinc-500: #a3abc4;
-  --color-zinc-600: #8a92ac;
-  --color-zinc-700: #5a5f77;
-  --color-zinc-800: #3b3f53;
-  --color-zinc-900: #292c3a;
-  --color-zinc-950: #1c1e27;
+  --color-zinc-50: #f7f8fb;
+  --color-zinc-100: #eceef4;
+  --color-zinc-200: #d9dce7;
+  --color-zinc-300: #bcc0d0;
+  --color-zinc-400: #9da2b6;
+  --color-zinc-500: #858aa0;
+  --color-zinc-600: #61667c;
+  --color-zinc-700: #3a3e4f;
+  --color-zinc-800: #272a37;
+  --color-zinc-900: #1a1c25;
+  --color-zinc-950: #121319;
 
   --font-sans:
     'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -128,7 +128,7 @@
 }
 
 @layer utilities {
-  /* horizontal scrollers (chips, "most bought" on phones) without a visible scrollbar */
+  /* horizontal scrollers (category chips on phones) without a visible scrollbar */
   .no-scrollbar {
     scrollbar-width: none;
   }

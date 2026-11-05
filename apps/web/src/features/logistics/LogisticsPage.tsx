@@ -15,7 +15,7 @@ import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { Card } from '../../components/ui/card';
 import { EmptyState, ErrorState } from '../../components/ui/empty-state';
-import { CompactSelect } from '../../components/ui/field';
+import { Dropdown } from '../../components/ui/dropdown';
 import { Container, PageHeader } from '../../components/ui/page';
 import { Skeleton } from '../../components/ui/skeleton';
 import { api, errorMessage } from '../../lib/api';
@@ -128,18 +128,16 @@ export function LogisticsPage() {
         title="Queue"
         description="Paid orders that were confirmed by the admin, oldest first."
         actions={
-          <CompactSelect
+          <Dropdown<Filter>
             label="Filter by status"
             value={filter}
-            onChange={(e) => setFilter(e.target.value as Filter)}
-          >
-            <option value="open">To ship (all open)</option>
-            {LOGISTICS_STATUSES.map((s) => (
-              <option key={s} value={s}>
-                {ORDER_STATUS_LABELS[s].label}
-              </option>
-            ))}
-          </CompactSelect>
+            options={[
+              { value: 'open', label: 'To ship (all open)' },
+              ...LOGISTICS_STATUSES.map((s) => ({ value: s, label: ORDER_STATUS_LABELS[s].label })),
+            ]}
+            onChange={setFilter}
+            align="start"
+          />
         }
       />
 

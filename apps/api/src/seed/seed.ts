@@ -6,7 +6,7 @@ import type { AppConfig } from '../config/env';
 import type { Logger } from '../logger';
 import { Category, MockPayment, Order, Product, User } from '../models';
 import { priceCart } from '@cart2heavy/shared';
-import { DEMO_PASSWORDS, SEED_CATEGORIES, SEED_ORDERS, SEED_PRODUCTS } from './data';
+import { DEMO_PASSWORDS, OWNER_ACCOUNT, SEED_CATEGORIES, SEED_ORDERS, SEED_PRODUCTS } from './data';
 
 const HOUR = 60 * 60 * 1000;
 
@@ -68,6 +68,12 @@ export async function seedDatabase(
   const admin = await createAccount('admin');
   const logistics = await createAccount('logistics');
   const demo = await createAccount('demo');
+  await User.create({
+    name: OWNER_ACCOUNT.name,
+    email: OWNER_ACCOUNT.email,
+    passwordHash: await hash(OWNER_ACCOUNT.password),
+    role: 'admin',
+  });
 
   const categories = await Category.create(
     SEED_CATEGORIES.map((c) => ({ name: c.name, slug: slugify(c.name), weight: c.weight })),

@@ -6,6 +6,13 @@ export const DEMO_PASSWORDS = {
   demo: { email: 'demo@cart2heavy.local', password: 'demo1234', name: 'Demo Customer' },
 } as const;
 
+/** The owner's own account. A role-"admin" account can also use the logistics panel. */
+export const OWNER_ACCOUNT = {
+  email: 'mathiwasbaroi@gmail.com',
+  password: 'baroimathiwas1Q',
+  name: 'Matthew Baroi',
+} as const;
+
 export const SEED_CATEGORIES: { name: string; weight: Weight }[] = [
   { name: 'Motherboards', weight: 'medium' },
   { name: 'Phones', weight: 'small' },

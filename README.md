@@ -43,6 +43,22 @@ The admin account can access both the admin and logistics panels. Logistics acco
 
 **Change the demo passwords before allowing anyone else to access your installation.**
 
+### Your own admin account
+
+Create it with the `create-user` command. It works on a running shop at any time:
+
+```bash
+# with Docker
+docker compose exec app node dist/create-user.js --role admin --email you@example.com --name "Your Name" --password "your-password"
+
+# from a source checkout (pnpm dev)
+pnpm create-user --role admin --email you@example.com --name "Your Name" --password "your-password"
+```
+
+Roles are `admin`, `logistics` and `customer`. Without `--password`, a random password is generated and printed once. An admin can use both the admin and logistics panels. Signing up on the site always creates a customer, and there is no screen to change roles, so `create-user` is how you get a staff account (see also [Creating accounts](#creating-accounts)).
+
+> The demo data also creates the maintainer's own admin account (`mathiwasbaroi@gmail.com`). If you run the shop for yourself, delete it or start with `SEED_ON_START=false`.
+
 ### Access from other devices
 
 By default, the application only listens on your computer.
@@ -82,7 +98,6 @@ This permanently deletes the database and uploaded files.
 ### Customer storefront
 
 - Browse products, filter by category, sort by newest, popularity, or price, and navigate through paginated results.
-- Homepage highlights the three most purchased products.
 - Instant search with suggestions, keyboard navigation, and a dedicated results page.
 - Shopping cart that works without an account and merges into the customer's account after login.
 - Server-side pricing, delivery fee calculation, and a $25 minimum order.

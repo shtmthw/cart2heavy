@@ -1,4 +1,3 @@
-import { ChevronDown } from 'lucide-react';
 import {
   useId,
   type InputHTMLAttributes,
@@ -11,7 +10,7 @@ import { cn } from '../../lib/utils';
 const control =
   'block w-full rounded-lg border bg-white px-3 text-base text-zinc-900 sm:text-sm placeholder:text-zinc-400 transition-shadow ' +
   'border-zinc-200 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/15 ' +
-  'disabled:opacity-60 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-700 dark:placeholder:text-zinc-500';
+  'disabled:opacity-60 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800 dark:hover:border-zinc-700 dark:placeholder:text-zinc-500';
 
 interface FieldShellProps {
   label: string;
@@ -124,43 +123,5 @@ export function SelectField({
         </select>
       )}
     </FieldShell>
-  );
-}
-
-/** A slim pill-shaped select (sorting, filters) with its own chevron and an optional prefix ("Sort"). */
-export function CompactSelect({
-  label,
-  prefix,
-  className,
-  children,
-  ...props
-}: { label: string; prefix?: string } & SelectHTMLAttributes<HTMLSelectElement>) {
-  return (
-    <div className={cn('relative inline-flex items-center', className)}>
-      {prefix && (
-        <span
-          aria-hidden
-          className="pointer-events-none absolute left-3.5 text-sm text-zinc-400 dark:text-zinc-500"
-        >
-          {prefix}
-        </span>
-      )}
-      <select
-        aria-label={label}
-        className={cn(
-          'h-11 cursor-pointer appearance-none rounded-full border border-zinc-200 bg-white pr-9 text-base font-medium sm:h-10 sm:text-sm text-zinc-800 shadow-sm',
-          'transition-all hover:border-zinc-300 focus-visible:border-accent focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-accent/15',
-          'dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:border-zinc-600',
-          prefix ? 'pl-[3.4rem]' : 'pl-4',
-        )}
-        {...props}
-      >
-        {children}
-      </select>
-      <ChevronDown
-        aria-hidden
-        className="pointer-events-none absolute right-3 size-4 text-zinc-400 dark:text-zinc-500"
-      />
-    </div>
   );
 }

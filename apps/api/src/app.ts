@@ -77,7 +77,8 @@ export function createApp(config: AppConfig, options: CreateAppOptions = {}): Ex
         directives: {
           // Safari upgrades every sub-request to https with this on, which breaks http://localhost
           'upgrade-insecure-requests': null,
-          'img-src': ["'self'", 'data:'],
+          // blob: = the preview of a photo the admin picked, before it is uploaded
+          'img-src': ["'self'", 'data:', 'blob:'],
         },
       },
     }),

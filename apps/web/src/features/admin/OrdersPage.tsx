@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import {
   canAdminCancel,
@@ -23,6 +22,7 @@ import { Skeleton } from '../../components/ui/skeleton';
 import { Table, Td, Th } from '../../components/ui/table';
 import { api, errorMessage } from '../../lib/api';
 import { useDocumentTitle } from '../../lib/hooks';
+import { useQueryParams } from '../../lib/useQueryParams';
 import { formatDate, formatDateTime } from '../../lib/utils';
 import { useState } from 'react';
 import { PaymentBadge, StatusBadge } from '../orders/badges';
@@ -150,7 +150,7 @@ function OrderDetails({ order }: { order: OrderDTO }) {
 
 export function OrdersPage() {
   useDocumentTitle('Orders');
-  const [params, setParams] = useSearchParams();
+  const [params, update] = useQueryParams();
   const status = ORDER_STATUSES.find((s) => s === params.get('status'));
   const payment = PAYMENT_STATUSES.find((s) => s === params.get('payment'));
   const page = Math.max(1, Number(params.get('page')) || 1);
@@ -158,15 +158,6 @@ export function OrdersPage() {
 
   const orders = useQuery(adminOrdersQuery({ status, payment, page, limit: 10 }));
   const selected = orders.data?.items.find((o) => o.id === selectedId) ?? null;
-
-  const update = (changes: Record<string, string | undefined>) => {
-    const next = new URLSearchParams(params);
-    for (const [key, value] of Object.entries(changes)) {
-      if (value) next.set(key, value);
-      else next.delete(key);
-    }
-    setParams(next);
-  };
 
   return (
     <Container>

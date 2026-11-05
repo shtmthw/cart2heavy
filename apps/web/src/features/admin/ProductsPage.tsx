@@ -98,10 +98,7 @@ function ProductFormDialogBody({
 
   const onSubmit = handleSubmit(async (values) => {
     setFormError(null);
-    if (!product && !file) {
-      setImageError('Choose a photo');
-      return;
-    }
+    if (!product && !file) return; // the missing photo was reported before validation ran
     const form = new FormData();
     form.set('name', values.name);
     form.set('description', values.description);
@@ -127,7 +124,15 @@ function ProductFormDialogBody({
   const { errors } = formState;
   const shownImage = previewUrl ?? product?.imageUrl ?? null;
   return (
-    <form noValidate onSubmit={(e) => void onSubmit(e)} className="space-y-4">
+    <form
+      noValidate
+      onSubmit={(e) => {
+        // the photo lives outside the form library, so it is checked here, next to the other fields
+        if (!product && !file) setImageError('Choose a photo');
+        void onSubmit(e);
+      }}
+      className="space-y-4"
+    >
       <div className="flex items-center gap-4">
         <div className="grid size-24 shrink-0 place-items-center overflow-hidden rounded-md border border-dashed border-zinc-300 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800">
           {shownImage ? (

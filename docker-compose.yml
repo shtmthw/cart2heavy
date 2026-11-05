@@ -47,7 +47,7 @@ services:
     image: axllent/mailpit
     restart: unless-stopped
     ports:
-      - '${APP_BIND:-127.0.0.1}:8025:8025'
+      - '${APP_BIND:-127.0.0.1}:${MAILPIT_PORT:-8025}:8025'
 
 volumes:
   mongo-data:

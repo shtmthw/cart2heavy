@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'react-router';
 import { PRODUCT_SORTS, type ProductSort } from '@cart2heavy/shared';
 import { CompactSelect } from '../../components/ui/field';
 import { Container } from '../../components/ui/page';
 import { Pagination } from '../../components/ui/pagination';
 import { useDocumentTitle } from '../../lib/hooks';
 import { categoriesQuery, productsQuery } from '../../lib/queries';
+import { useQueryParams } from '../../lib/useQueryParams';
 import { cn } from '../../lib/utils';
 import { MostBought } from './MostBought';
 import { NoProducts, ProductGrid } from './ProductGrid';
@@ -54,23 +54,13 @@ function Chip({
 
 export function HomePage() {
   useDocumentTitle(undefined);
-  const [params, setParams] = useSearchParams();
+  const [params, update] = useQueryParams();
   const category = params.get('category') ?? undefined;
   const sort = parseSort(params.get('sort'));
   const page = parsePage(params.get('page'));
 
   const categories = useQuery(categoriesQuery);
   const products = useQuery(productsQuery({ category, sort, page }));
-
-  // the URL is the single source of truth, so links and refreshes keep the filters
-  const update = (changes: Record<string, string | undefined>) => {
-    const next = new URLSearchParams(params);
-    for (const [key, value] of Object.entries(changes)) {
-      if (value === undefined || value === '') next.delete(key);
-      else next.set(key, value);
-    }
-    setParams(next);
-  };
 
   return (
     <Container>

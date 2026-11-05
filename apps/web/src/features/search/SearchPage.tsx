@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { SearchX } from 'lucide-react';
-import { useSearchParams } from 'react-router';
 import { PRODUCT_SORTS } from '@cart2heavy/shared';
 import { EmptyState } from '../../components/ui/empty-state';
 import { CompactSelect } from '../../components/ui/field';
@@ -8,26 +7,18 @@ import { Container, PageHeader } from '../../components/ui/page';
 import { Pagination } from '../../components/ui/pagination';
 import { useDocumentTitle } from '../../lib/hooks';
 import { productsQuery } from '../../lib/queries';
+import { useQueryParams } from '../../lib/useQueryParams';
 import { parsePage, parseSort, SORT_LABELS } from '../catalog/HomePage';
 import { ProductGrid } from '../catalog/ProductGrid';
 
 export function SearchPage() {
-  const [params, setParams] = useSearchParams();
+  const [params, update] = useQueryParams();
   const q = params.get('q')?.trim() ?? '';
   const sort = parseSort(params.get('sort'));
   const page = parsePage(params.get('page'));
   useDocumentTitle(q ? `Search: ${q}` : 'Search');
 
   const products = useQuery({ ...productsQuery({ q, sort, page }), enabled: q.length > 0 });
-
-  const update = (changes: Record<string, string | undefined>) => {
-    const next = new URLSearchParams(params);
-    for (const [key, value] of Object.entries(changes)) {
-      if (value === undefined) next.delete(key);
-      else next.set(key, value);
-    }
-    setParams(next);
-  };
 
   if (!q) {
     return (

@@ -199,6 +199,17 @@ describe('system endpoints', () => {
     });
   });
 
+  it('sends security headers, and the CSP lets the admin preview a photo before upload', async () => {
+    const res = await request(ctx.app).get('/api/health');
+    expect(res.headers['x-content-type-options']).toBe('nosniff');
+    expect(res.headers['x-powered-by']).toBeUndefined();
+    const csp = res.headers['content-security-policy'] as string;
+    expect(csp).toContain("img-src 'self' data: blob:");
+    expect(csp).toContain("script-src 'self'");
+    // Safari would upgrade every request to https on http://localhost
+    expect(csp).not.toContain('upgrade-insecure-requests');
+  });
+
   it('unknown API routes are a JSON 404', async () => {
     const res = await request(ctx.app).get('/api/nope');
     expect(res.status).toBe(404);

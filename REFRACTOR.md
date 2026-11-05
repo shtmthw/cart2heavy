@@ -448,13 +448,13 @@ Each phase ends with something that runs. Commits are made per phase on a branch
 ### Phase 7 — Docker
 - [x] Multi-stage `Dockerfile`, `.dockerignore`, API serves SPA (history fallback) + `/uploads`.
 - [x] `docker-compose.yml` (app + mongo + mailpit, healthchecks, volumes, defaults).
-- [x] Image hygiene: non-root user, no dev dependencies, no secrets, reasonable size (target < 250 MB; actual: ~312 MB unpacked / ~100 MB compressed, of which the `node:24-alpine` base is ~255 MB – see the progress log).
+- [x] Image hygiene: non-root user, no dev dependencies, no secrets, reasonable size (target < 250 MB; actual: ~312 MB unpacked / ~71 MB compressed, of which the `node:24-alpine` base is ~255 MB – see the progress log).
 - **Done when:** `docker compose up --build` on a clean machine state → store at :8080, seeded.
 
 ### Phase 8 — Tests, e2e & screenshots
-- [ ] Playwright e2e against the compose stack: register → add to cart → checkout → mock pay →
+- [x] Playwright e2e against the compose stack: register → add to cart → checkout → mock pay →
       admin confirm → logistics deliver → customer sees "Delivered".
-- [ ] Screenshot script (desktop + one mobile shot): home, product, cart, checkout, orders timeline,
+- [x] Screenshot script (desktop + one mobile shot): home, product, cart, checkout, orders timeline,
       admin dashboard, admin products, logistics → `docs/screenshots/*.png`.
 - **Done when:** e2e is green and the screenshots look right.
 
@@ -538,3 +538,9 @@ Each phase ends with something that runs. Commits are made per phase on a branch
   routes, uploads on the volume as the unprivileged user, data and sessions survive a restart. Extra hardening over the plan: with no `JWT_SECRET`
   the server creates a random secret once and keeps it in MongoDB (no well-known default secret in compose). Image size: the Node 24 Alpine base
   alone is ~255 MB unpacked, so the 250 MB target is missed by ~60 MB (production dependencies are 58 MB, `stripe` alone 22 MB); accepted.
+- 2026-11-05 — Phase 8 done: `pnpm e2e` builds and starts its own compose stack (project `c2h-e2e`, port 8081, Mailpit 8026), runs 19 Playwright
+  tests in Chromium (storefront, search/keyboard, guest cart, customer sign-up → cancel → retry → pay → track, account, permissions in UI and API,
+  admin catalog with photo upload, the full processing → delivered lifecycle across customer/admin/logistics with the emails checked in Mailpit,
+  cancellation) and removes the stack; any uncaught error or `console.error` fails a test. `pnpm screenshots` writes 14 images to
+  `docs/screenshots/`. The e2e run found and fixed two real bugs: the CSP blocked `blob:` images (admin photo preview) and URL filter updates could
+  use a stale copy of the query string (now `useQueryParams`, built on the current address).
